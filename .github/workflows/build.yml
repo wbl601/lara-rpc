@@ -1,0 +1,99 @@
+name: build
+
+# 这个仓库本身不含 lara 源码，只在编译时把上游 clone 下来再贴补丁。
+# 好处：上游发布新版时，只要改 UPSTREAM_REF 就能跟，不用维护一份 fork。
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      upstream_ref:
+        description: "拉取上游哪个 ref（分支/标签/commit）"
+        required: false
+        default: main
+
+permissions:
+  contents: write
+
+env:
+  UPSTREAM_REPO: https://github.com/rooootdev/lara.git
+  UPSTREAM_REF: ${{ github.event.inputs.upstream_ref || 'main' }}
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 60
+
+    steps:
+      - name: checkout 补丁仓库
+        uses: actions/checkout@v4
+
+      - name: 选择 Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: 版本信息
+        run: |
+          xcodebuild -version
+          echo "upstream ref = $UPSTREAM_REF"
+
+      - name: clone 上游
+        run: |
+          git clone --depth 1 --branch "$UPSTREAM_REF" "$UPSTREAM_REPO" src
+          git -C src log --oneline -1
+
+      - name: 应用补丁
+        run: |
+          cp -R overlay/. src/
+          echo "--- 补丁文件 ---"
+          ls -l src/lara/rpc/
+          echo "--- 确认入口文件已含新页签 ---"
+          grep -n "RpcView()" src/lara/lara.swift
+          grep -n "NSLocalNetworkUsageDescription" src/lara/Info.plist
+
+      - name: 安装 ldid
+        run: brew install ldid
+
+      - name: 编译
+        run: |
+          cd src
+          chmod +x scripts/build_ipa.sh
+          ./scripts/build_ipa.sh
+
+      - name: 上传产物
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lara-ipa
+          if-no-files-found: ignore
+          path: |
+            src/build/lara.ipa
+            src/build/xcodebuild.log
+
+      # Actions 的网页日志只能在浏览器里看。这里把完整编译日志提交回仓库，
+      # 让外部工具（也就是我）能直接读文件定位编译错误。
+      - name: 失败时提交编译日志
+        if: failure()
+        run: |
+          mkdir -p logs
+          cp src/build/xcodebuild.log logs/xcodebuild.log 2>/dev/null || true
+          if [ -s logs/xcodebuild.log ]; then
+            git config user.name "ci-bot"
+            git config user.email "ci-bot@users.noreply.github.com"
+            git add -A logs
+            git commit -m "ci: 编译失败日志 $(date -u +%Y-%m-%dT%H:%M:%SZ)" || true
+            git push || true
+          fi
+
+      - name: 发布 Release
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="build-$(date -u +%Y%m%d-%H%M%S)"
+          gh release create "$TAG" src/build/lara.ipa \
+            --title "$TAG" \
+            --notes "lara-rpc patched build (upstream $UPSTREAM_REF)" \
+            --latest
+          echo "已发布 release: $TAG"
