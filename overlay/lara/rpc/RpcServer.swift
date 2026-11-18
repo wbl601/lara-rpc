@@ -151,9 +151,10 @@ final class RpcServer {
     }
 
     private func detach() {
-        // 用头文件里明确声明的名字，别用 Swift 侧那个被改写过的 destroy()，
-        // 免得哪天上游改导入行为，我们这层跟着编译不过。
-        _ = rc?.destroyRemoteCall()
+        // 头文件里写的是 -destroyRemoteCall，但它被标了 obsoleted，
+        // Swift 侧只能用改名后的 destroy()。用旧名会直接编译不过：
+        //   error: 'destroyRemoteCall()' has been renamed to 'destroy()'
+        _ = rc?.destroy()
         rc = nil
         targetName = ""
     }
