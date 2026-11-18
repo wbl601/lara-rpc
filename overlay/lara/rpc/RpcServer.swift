@@ -30,11 +30,34 @@ final class RpcServer {
     private let lock = NSLock()
     private var logs: [String] = []
 
+    // 注入状态机。为什么必须有这个：
+    // RemoteCall 进一个「已被系统挂起」的进程时，那个远程线程永远不会被调度，
+    // 调用就一直不返回。如果这件事发生在主线程上，SwiftUI 卡死 → 20 秒后
+    // iOS 的用户态 watchdog 判定 SpringBoard 无响应 → 整机 panic 重启。
+    // 所以注入必须跑在后台线程，主线程只读状态。
+    private var injectState: String = "idle"   // idle / injecting / ready / failed
+    private var injectMessage: String = ""
+    private var injectStarted: TimeInterval = 0
+    private var injectProc: String = ""
+
     private(set) var isRunning = false
 
-    var targetDescription: String {
+    /// rc 会被注入线程改写，路由线程也会读，统一从锁里取。
+    private func currentRC() -> RemoteCall? {
+        lock.lock()
+        defer { lock.unlock() }
+        return rc
+    }
+
+    private func targetDescLocked() -> String {
         if let r = rc { return "\(targetName) (pid \(r.pid))" }
         return "none"
+    }
+
+    var targetDescription: String {
+        lock.lock()
+        defer { lock.unlock() }
+        return targetDescLocked()
     }
 
     // MARK: - 日志
@@ -123,25 +146,86 @@ final class RpcServer {
         log("stopped")
     }
 
-    func setTarget(_ proc: String) -> String {
-        if let existing = rc, targetName == proc {
-            return "already injected into \(proc) pid \(existing.pid)"
+    /// 供 UI / HTTP 查询当前注入状态，附带已耗时（秒），超时可以据此判断。
+    func injectStatus() -> [String: Any] {
+        lock.lock()
+        defer { lock.unlock() }
+        var d: [String: Any] = [
+            "state": injectState,
+            "proc": injectProc,
+            "message": injectMessage,
+            "target": targetDescLocked(),
+        ]
+        if injectStarted > 0 {
+            d["elapsed"] = Int(Date().timeIntervalSince1970 - injectStarted)
         }
-        if rc != nil { detach() }
+        return d
+    }
 
-        guard laramgr.shared.dsready else { return "kernel r/w not ready (tap Run Exploit first)" }
+    /// 立刻返回，真正的注入在后台线程做。UI 不会因此卡住。
+    @discardableResult
+    func beginInject(_ proc: String) -> String {
+        lock.lock()
+        if injectState == "injecting" {
+            let s = "already injecting \(injectProc)"
+            lock.unlock()
+            return s
+        }
+        injectState = "injecting"
+        injectMessage = ""
+        injectProc = proc
+        injectStarted = Date().timeIntervalSince1970
+        lock.unlock()
+
+        log("开始注入 \(proc)（后台线程）")
+
+        let t = Thread { [weak self] in self?.doInject(proc) }
+        t.name = "lara-rpc-inject"
+        t.stackSize = 1 << 21
+        t.start()
+        return "injecting"
+    }
+
+    private func doInject(_ proc: String) {
+        if currentRC() != nil { detach() }
+
+        guard laramgr.shared.dsready else {
+            finishInject("failed", "kernel r/w not ready (tap Run Exploit first)")
+            return
+        }
+
+        // 先确认目标真的在跑。pid=0 说明进程不存在（被系统回收或从没启动过），
+        // 此时注入只会无限等一个永远不会被调度的远程线程 —— 这就是上一版
+        // 「点一下整机卡死重启」的成因。这里直接拒绝，代价为零。
+        let pid = proc.withCString { find_process_pid($0) }
+        guard pid > 0 else {
+            finishInject("failed", "进程 \(proc) 未运行（pid=0），先 GET /launch?b=<bundleid> 再注入")
+            return
+        }
+        log("目标 \(proc) 在运行，pid=\(pid)，开始建会话")
 
         // 与 laramgr 里同样的调用方式：init 失败时返回 nil，错误原因用类方法取
         let inst: RemoteCall? = RemoteCall(process: proc, useMigFilterBypass: false)
         guard let inst = inst else {
-            let e = RemoteCall.lastInitError() ?? "unknown"
-            log("inject \(proc) failed: \(e)")
-            return "inject failed: \(e)"
+            finishInject("failed", RemoteCall.lastInitError() ?? "unknown")
+            return
         }
+
+        lock.lock()
         rc = inst
         targetName = proc
-        log("injected into \(proc) pid \(inst.pid)")
-        return "ok pid \(inst.pid)"
+        injectState = "ready"
+        injectMessage = "pid \(inst.pid)"
+        lock.unlock()
+        log("注入成功 \(proc) pid \(inst.pid)")
+    }
+
+    private func finishInject(_ state: String, _ message: String) {
+        lock.lock()
+        injectState = state
+        injectMessage = message
+        lock.unlock()
+        log("注入未成功 [\(state)] \(message)")
     }
 
     /// 日志尾部，给 UI 轮询用。
@@ -154,9 +238,12 @@ final class RpcServer {
         // 头文件里写的是 -destroyRemoteCall，但它被标了 obsoleted，
         // Swift 侧只能用改名后的 destroy()。用旧名会直接编译不过：
         //   error: 'destroyRemoteCall()' has been renamed to 'destroy()'
-        _ = rc?.destroy()
+        lock.lock()
+        let r = rc
         rc = nil
         targetName = ""
+        lock.unlock()
+        _ = r?.destroy()
     }
 
     // MARK: - 连接循环
@@ -252,16 +339,31 @@ final class RpcServer {
                 "kernbase": String(format: "0x%llx", mgr.kernbase),
                 "kernslide": String(format: "0x%llx", mgr.kernslide),
                 "target": targetDescription,
+                "inject": injectStatus(),
                 "ts": Int(Date().timeIntervalSince1970),
             ])
 
         case "/inject":
             let proc = params["proc"] ?? "WeChat"
-            let r = setTarget(proc)
-            return (r.hasPrefix("ok") || r.hasPrefix("already") ? 200 : 500, [
-                "result": r,
-                "target": targetDescription,
-            ])
+            let r = beginInject(proc)
+            return (200, ["result": r, "inject": injectStatus()])
+
+        case "/inject_status":
+            return (200, injectStatus())
+
+        // 注入前的体检：目标进程在不在。微信被系统回收/从未启动时 pid 为 0，
+        // 这时候强行注入必然长时间不返回（远程线程永远等不到调度）。
+        case "/pid":
+            guard let n = params["n"], !n.isEmpty else { return (400, ["error": "missing n"]) }
+            let pid = n.withCString { find_process_pid($0) }
+            return (200, ["proc": n, "pid": Int(pid), "running": pid > 0])
+
+        // 把目标 App 拉到前台。挂起的进程没法被 RemoteCall 驱动，
+        // 先 launch 再注入，命中率高得多。
+        case "/launch":
+            guard let b = params["b"], !b.isEmpty else { return (400, ["error": "missing b"]) }
+            let ret = b.withCString { launch_app($0) }
+            return (200, ["bundle": b, "ret": Int(ret)])
 
         case "/log":
             let n = Int(params["n"] ?? "80") ?? 80
@@ -276,8 +378,9 @@ final class RpcServer {
         // ---- 以下都是远程原语，必须先注入成功 ----
 
         case "/c", "/s", "/str", "/msg", "/rd", "/rd64":
-            guard let r = rc else {
-                return (409, ["error": "not injected, POST /inject?proc=WeChat first"])
+            guard let r = currentRC() else {
+                return (409, ["error": "not injected, POST /inject?proc=WeChat first",
+                              "inject": injectStatus()])
             }
 
             switch path {
@@ -330,7 +433,8 @@ final class RpcServer {
             }
 
         default:
-            return (404, ["error": "unknown path", "paths": ["/health", "/inject", "/log", "/stop",
+            return (404, ["error": "unknown path", "paths": ["/health", "/inject", "/inject_status",
+                                                           "/pid", "/launch", "/log", "/stop",
                                                            "/c", "/s", "/str", "/msg", "/rd", "/rd64"]])
         }
     }

@@ -18,6 +18,8 @@ struct RpcView: View {
     @State private var status: String = ""
     @State private var logtext: String = ""
     @State private var timer: Timer?
+    @State private var injectline: String = "-"
+    @State private var injectcolor: Color = .secondary
 
     private var server: RpcServer { RpcServer.shared }
 
@@ -37,6 +39,11 @@ struct RpcView: View {
                         Text(server.targetDescription)
                             .font(.system(.footnote, design: .monospaced))
                     }
+                    LabeledContent("inject") {
+                        Text(injectline)
+                            .font(.system(.footnote, design: .monospaced))
+                            .foregroundColor(injectcolor)
+                    }
                 } header: {
                     Text("Prerequisites")
                 } footer: {
@@ -48,7 +55,9 @@ struct RpcView: View {
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                     Button("Inject RemoteCall") {
-                        status = server.setTarget(procname.trimmingCharacters(in: .whitespaces))
+                        // 立刻返回，注入在后台线程做。上一版这里是同步调用，
+                        // 微信处于挂起态时会把主线程钉死 → watchdog → 整机重启。
+                        status = server.beginInject(procname.trimmingCharacters(in: .whitespaces))
                         refresh()
                     }
                     .disabled(!mgr.dsready)
@@ -124,5 +133,26 @@ struct RpcView: View {
 
     private func refresh() {
         logtext = (server.tailLog(40)).joined(separator: "\n")
+
+        let st = server.injectStatus()
+        let state = (st["state"] as? String) ?? "idle"
+        let msg = (st["message"] as? String) ?? ""
+        let elapsed = (st["elapsed"] as? Int) ?? 0
+
+        switch state {
+        case "ready":
+            injectline = "ready \(msg)"
+            injectcolor = .green
+        case "injecting":
+            // 超过 45 秒基本可以判定目标进程没在跑，不需要继续等
+            injectline = elapsed > 45 ? "stuck \(elapsed)s — target 可能已挂起" : "injecting… \(elapsed)s"
+            injectcolor = elapsed > 45 ? .orange : .blue
+        case "failed":
+            injectline = "failed \(msg)"
+            injectcolor = .red
+        default:
+            injectline = "idle"
+            injectcolor = .secondary
+        }
     }
 }
