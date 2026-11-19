@@ -694,7 +694,7 @@ final class RpcServer {
             case "/ui":
                 let depth = Int32(params["depth"] ?? "6") ?? 6
                 let maxNodes = Int32(params["max"] ?? "200") ?? 200
-                let dump = remote_ui_dump(r, depth, maxNodes)
+                let dump = remote_ui_dump(r, depth, maxNodes) ?? ""
                 let lines = dump.split(separator: "\n").count
                 return (200, ["dump": dump, "lines": lines,
                               "depth": Int(depth), "max": Int(maxNodes)])
