@@ -124,6 +124,15 @@ final class RpcServer {
         }
         if !kaenabled { toggleka() }
 
+        // iOS 的「本地网络」权限只在 app **主动发起**局域网访问时才弹窗，纯 listen 不触发。
+        // 后果很隐蔽：服务起得来、手机自己访问 127.0.0.1 正常、lara 页面上 state 就是
+        // listening，但电脑连上来时内核把 SYN 静默丢掉 —— 外部看到的是 timeout 而不是
+        // refused，极易被误判成「服务没起」。这里主动打一发 UDP 广播把询问逼出来。
+        Thread { [weak self] in
+            self?.requestLocalNetworkPermission()
+            self?.selfCheck(port: port)
+        }.start()
+
         let t = Thread { [weak self] in self?.acceptLoop() }
         t.name = "lara-rpc-http"
         t.stackSize = 1 << 20
@@ -132,6 +141,61 @@ final class RpcServer {
 
         log("listening on 0.0.0.0:\(port)")
         return "ok"
+    }
+
+    /// 主动触发 iOS 本地网络权限询问。
+    /// 原理：向广播地址发一包 UDP。系统在放行这个 sendto 之前会要求 app 拿到
+    /// Local Network 权限，于是弹窗出现。只 listen 是等不到这个弹窗的。
+    private func requestLocalNetworkPermission() {
+        let u = socket(AF_INET, SOCK_DGRAM, 0)
+        guard u >= 0 else { log("权限触发：socket() 失败，跳过"); return }
+        var bc: Int32 = 1
+        setsockopt(u, SOL_SOCKET, SO_BROADCAST, &bc, socklen_t(MemoryLayout<Int32>.size))
+
+        var a = sockaddr_in()
+        a.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        a.sin_family = sa_family_t(AF_INET)
+        a.sin_port = UInt16(9).bigEndian
+        a.sin_addr.s_addr = inet_addr("255.255.255.255")
+
+        let payload = Array("lara-rpc".utf8)
+        let n = withUnsafePointer(to: &a) { p -> Int in
+            p.withMemoryRebound(to: sockaddr.self, capacity: 1) { sp in
+                payload.withUnsafeBufferPointer { buf in
+                    sendto(u, buf.baseAddress, buf.count, 0, sp,
+                           socklen_t(MemoryLayout<sockaddr_in>.size))
+                }
+            }
+        }
+        close(u)
+        if n > 0 {
+            log("权限触发：UDP 广播已发出。若弹出「本地网络」询问请点允许")
+        } else {
+            log("权限触发：广播 sendto 失败 errno=\(errno)（多半是权限已被拒，去设置里手动打开）")
+        }
+    }
+
+    /// listen 到底生效没有。走 127.0.0.1，这条路径不受本地网络权限影响：
+    /// 连得上 → 服务本身没问题，外部连不上就一定是权限/网络；连不上 → 代码或端口问题。
+    /// 连上后立刻 close，acceptLoop 那边 read 返回 0 自然结束，不会卡住串行处理。
+    private func selfCheck(port: UInt16) {
+        Thread.sleep(forTimeInterval: 0.4)
+        let s = socket(AF_INET, SOCK_STREAM, 0)
+        guard s >= 0 else { return }
+        var a = sockaddr_in()
+        a.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        a.sin_family = sa_family_t(AF_INET)
+        a.sin_port = port.bigEndian
+        a.sin_addr.s_addr = inet_addr("127.0.0.1")
+        let r = withUnsafePointer(to: &a) { p -> Int32 in
+            p.withMemoryRebound(to: sockaddr.self, capacity: 1) { sp in
+                connect(s, sp, socklen_t(MemoryLayout<sockaddr_in>.size))
+            }
+        }
+        let e = errno
+        close(s)
+        log(r == 0 ? "自检 127.0.0.1:\(port) 连接成功 → listen 正常"
+                   : "自检 127.0.0.1:\(port) 失败 errno=\(e) → 端口没起来")
     }
 
     func stop() {

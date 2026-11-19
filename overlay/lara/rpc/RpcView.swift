@@ -92,7 +92,7 @@ struct RpcView: View {
                 } header: {
                     Text("HTTP endpoint")
                 } footer: {
-                    Text("启动时会同时打开静音保活并禁止自动锁屏。生效后 PC 上执行 curl http://<手机IP>:\(portstring)/health 。")
+                    Text("启动时会主动发一包 UDP 广播来触发 iOS 的「本地网络」权限询问——纯监听是等不到这个弹窗的。\n\n如果电脑连手机 IP 是 timeout 而不是 connection refused，就是权限没放行：去 设置 → 隐私与安全性 → 本地网络 打开 lara。\n\nRPC log 里出现「自检 127.0.0.1 连接成功」说明端口本身没问题。")
                 }
 
                 if !status.isEmpty {
