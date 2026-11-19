@@ -9,7 +9,7 @@ Build settings from command line:
     CODE_SIGNING_REQUIRED = NO
     SDKROOT = iphoneos26.5
 
-2026-11-19 09:20:28.816 xcodebuild[1374:7265] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-11-19 12:26:16.153 xcodebuild[1337:7272] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
 --- xcodebuild: WARNING: Using the first of multiple matching destinations:
 { platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device }
 { platform:iOS Simulator, id:dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder, name:Any iOS Simulator Device }
@@ -47,23 +47,23 @@ ExecuteExternalTool /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/X
 
 ExecuteExternalTool /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
 
-Build description signature: ea656b43fb6fe92d31ec5eb9718e4e5e
-Build description path: /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/XCBuildData/ea656b43fb6fe92d31ec5eb9718e4e5e.xcbuilddata
-CreateBuildDirectory /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath
+Build description signature: 0c38a664cfae40ee3ee57947559efa73
+Build description path: /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/XCBuildData/0c38a664cfae40ee3ee57947559efa73.xcbuilddata
+ClangStatCache /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.5-23F81a-688ef53f1462e2c8f657fdc38a81448fee66e23052a0157c865c76b268046726.sdkstatcache
     cd /Users/runner/work/lara-rpc/lara-rpc/src/lara.xcodeproj
-    builtin-create-build-directory /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath
+    /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -o /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.5-23F81a-688ef53f1462e2c8f657fdc38a81448fee66e23052a0157c865c76b268046726.sdkstatcache
 
 CreateBuildDirectory /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/InstallationBuildProductsLocation
     cd /Users/runner/work/lara-rpc/lara-rpc/src/lara.xcodeproj
     builtin-create-build-directory /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/InstallationBuildProductsLocation
 
+CreateBuildDirectory /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath
+    cd /Users/runner/work/lara-rpc/lara-rpc/src/lara.xcodeproj
+    builtin-create-build-directory /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath
+
 CreateBuildDirectory /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath
     cd /Users/runner/work/lara-rpc/lara-rpc/src/lara.xcodeproj
     builtin-create-build-directory /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath
-
-ClangStatCache /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.5-23F81a-688ef53f1462e2c8f657fdc38a81448fee66e23052a0157c865c76b268046726.sdkstatcache
-    cd /Users/runner/work/lara-rpc/lara-rpc/src/lara.xcodeproj
-    /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -o /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.5-23F81a-688ef53f1462e2c8f657fdc38a81448fee66e23052a0157c865c76b268046726.sdkstatcache
 
 WriteAuxiliaryFile /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara-4c702f234c682efa825d6a31718a42f0-VFS-iphoneos/all-product-headers.yaml
     cd /Users/runner/work/lara-rpc/lara-rpc/src/lara.xcodeproj
@@ -85,6 +85,10 @@ CreateBuildDirectory /Users/runner/Library/Developer/Xcode/DerivedData/lara-duse
     cd /Users/runner/work/lara-rpc/lara-rpc/src/lara.xcodeproj
     builtin-create-build-directory /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos
 
+WriteAuxiliaryFile /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-project-headers.hmap (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    write-file /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-project-headers.hmap
+
 WriteAuxiliaryFile /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara.hmap (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     write-file /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara.hmap
@@ -96,10 +100,6 @@ WriteAuxiliaryFile /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqj
 WriteAuxiliaryFile /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara.DependencyMetadataFileList (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     write-file /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara.DependencyMetadataFileList
-
-WriteAuxiliaryFile /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-project-headers.hmap (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    write-file /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-project-headers.hmap
 
 WriteAuxiliaryFile /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-own-target-headers.hmap (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
@@ -181,48 +181,58 @@ GenerateAssetSymbols /Users/runner/work/lara-rpc/lara-rpc/src/lara/other/media.x
 CompileAssetCatalogVariant thinned /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/InstallationBuildProductsLocation/Applications/lara.app /Users/runner/work/lara-rpc/lara-rpc/src/lara/other/media.xcassets (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     /Applications/Xcode_26.6.app/Contents/Developer/usr/bin/actool /Users/runner/work/lara-rpc/lara-rpc/src/lara/other/media.xcassets --compile /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_dependencies_thinned --output-partial-info-plist /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_generated_info.plist_thinned --app-icon AppIcon --include-all-app-icons --compress-pngs --enable-on-demand-resources YES --development-region en --target-device iphone --target-device ipad --minimum-deployment-target 16.0 --platform iphoneos
+/* com.apple.actool.document.warnings */
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/other/media.xcassets:./AppIcon.appiconset/[ios][universal][1024x1024][][][][][tinted][][]: warning: AppIcon.appiconset/out.png is 2048x2048 but should be 1024x1024.
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/other/media.xcassets:./AppIcon.appiconset/[ios][universal][1024x1024][][][][][tinted][][]: warning: AppIcon.appiconset/out.png is 2048x2048 but should be 1024x1024.
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/other/media.xcassets:./AppIcon.appiconset/[ios][universal][1024x1024][][][][][tinted][][]: warning: AppIcon.appiconset/out.png is 2048x2048 but should be 1024x1024.
+/* com.apple.actool.compilation-results */
+/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_generated_info.plist_thinned
+/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_output/thinned/AppIcon60x60@2x.png
+/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_output/thinned/AppIcon76x76@2x~ipad.png
+/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_output/thinned/Assets.car
+
 
 SwiftDriver lara normal arm64e com.apple.xcode.tools.swift.compiler (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     builtin-SwiftDriver -- /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name lara -Onone @/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.SwiftFileList -DDEBUG -default-isolation\=MainActor -enable-bare-slash-regex -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -target arm64e-apple-ios16.0 -g -module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos -F /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos -emit-localized-strings -emit-localized-strings-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.5-23F81a-688ef53f1462e2c8f657fdc38a81448fee66e23052a0157c865c76b268046726.sdkstatcache -output-file-map /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-generated-files.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-own-target-headers.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-project-headers.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos/include -Xcc -I/Users/runner/work/lara-rpc/lara-rpc/src/lara -Xcc -I/Users/runner/work/lara-rpc/lara-rpc/src/lara/kexploit -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources-normal/arm64e -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/arm64e -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara-Swift.h -import-objc-header /Users/runner/work/lara-rpc/lara-rpc/src/lara/lara-Bridging-Header.h -working-directory /Users/runner/work/lara-rpc/lara-rpc/src -experimental-emit-module-separately -disable-cmo
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_float-DX0XFUYL60JXI4SR3A9F5PG3G.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ptrauth-375FJ355G9LMZPWGTECNAJ90D.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stdbool-CAO8OT6DFH39TVUUF43N33B6F.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/DeveloperToolsSupport-D1S0CXBLBLU03MJ0UYPVJW1UV.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_AvailabilityInternal-C2FRN9H0UTF1SAIQNUGXK05O5.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stddef-C5T0UW9M78VJDBFW40D2RLJG5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_float-DX0XFUYL60JXI4SR3A9F5PG3G.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_SwiftConcurrencyShims-9NC6U2EP7D8Q8A30G4HPULUAJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ptrauth-375FJ355G9LMZPWGTECNAJ90D.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/SwiftShims-6GQ95KFW0C8PSM4FR1S8X0R8W.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stdarg-DLJD4CF9MIWDPFFZOIYPMU3T4.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ptrcheck-4QVSXQMTJ7CBPS4VHPTAMUNQ7.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stddef-C5T0UW9M78VJDBFW40D2RLJG5.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/SwiftShims-6GQ95KFW0C8PSM4FR1S8X0R8W.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_AvailabilityInternal-C2FRN9H0UTF1SAIQNUGXK05O5.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_DarwinFoundation1-E5QKN9MFNMLHMQ4MHXNQHOW3J.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stdbool-CAO8OT6DFH39TVUUF43N33B6F.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_limits-67UH780P0MIOY4HGEXRGYZGCX.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ExtensionFoundation-EH7HRRU7E5K56ZIC9PX34JAKY.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_DarwinFoundation2-6GDGLFZDP68XJNKQ9ICHC96G5.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_tgmath-9G6GMRG92GC3AXDKHFWB6UBGE.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_limits-67UH780P0MIOY4HGEXRGYZGCX.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stdint-2OMNCN2P8OWDYLDTBU8ZTAC24.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_tgmath-9G6GMRG92GC3AXDKHFWB6UBGE.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/sys_types-WSMY9F4REKZB93NC1T89OZ1K.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_DarwinFoundation3-ZWUIB9SNEUCT3XSDDHF17D7E.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stdint-2OMNCN2P8OWDYLDTBU8ZTAC24.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_stdatomic-DMTJ6J80V49TPNEZUBENRZY51.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_DarwinFoundation3-ZWUIB9SNEUCT3XSDDHF17D7E.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_Builtin_intrinsics-A0T9HCTK44QC1Q107R6OUM7HW.pcm
 
@@ -234,11 +244,11 @@ SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/simd-90CLRMMQ4GW6OJS0R3I9QINTQ.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/MachO-1OFK28VU5EMNU0H5EKVM3LLH5.pcm
-
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ObjectiveC-C2JQXLQBG4421QR1TH6FU7HGV.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Compression-1EE72RL0E5YEHRRS1J332LMIF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/MachO-1OFK28VU5EMNU0H5EKVM3LLH5.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/os_object-MLFFY0UJWYT3DH1R5M122FQV.pcm
 
@@ -248,23 +258,23 @@ SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Dispatch-22MGLYGDI3V9C9OX3CNRVWEIC.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreFoundation-1LOM9AU914BNGMDWXKM64K8JC.pcm
-
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/XPC-MT1LJBCKNIM34YV8126W5FEK.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/notify-8HHS6VFKYYZ3W0N7G72XZU8K7.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/os-5V01A0HQMMW0FSNYMGLC9OV4B.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreGraphics-6Q1B354XPK3W88KZ4Q5BL4JF3.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/dnssd-6NLHJYYCQPZRN6GRWP52MK5P8.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Security-29QEYUETV7A1IC2B7PY71RJFX.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreFoundation-1LOM9AU914BNGMDWXKM64K8JC.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreAudioTypes-IY8IT6WO8LP85KO57YX8NYL1.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CFNetwork-D81G300S202BG6ARB2EOZ5B0D.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ImageIO-4ZHQI0Q26J9JOTSM7MHIHMTQR.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreGraphics-6Q1B354XPK3W88KZ4Q5BL4JF3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Security-29QEYUETV7A1IC2B7PY71RJFX.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreAudio-8WV9ROE3LGIK9JNRCHKR274DA.pcm
 
@@ -272,47 +282,49 @@ SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreText-62KMN85X7WRSG5EX33E91IYVZ.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/dnssd-6NLHJYYCQPZRN6GRWP52MK5P8.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/UserNotifications-41XX8O5ZNHNCLFYMED6AHHUKK.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Accessibility-EJ4JHAP3ABY178K8KNGV3RFXB.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/FileProvider-C3XM1QQ9YKW4CFFEFEQP596IK.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreMIDI-9LSH9NE9GCK0UUK5M3RJJCL6G.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/IOSurface-5OP793V8A5UWI6TVQ77A6RY7W.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Symbols-5Q38RCQJWDS85WNTL5B8DDNFY.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreData-2BY7J5N3ZYW9Y90XARLJBZY9A.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/UIUtilities-1FXUP01V5T748PHU6H1OJ2Q27.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AudioToolbox-7BK952CEX5RJ10DYTWDK2TY40.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/DataDetection-89KKSLY5XFJ3QTJXCE3AJI7DZ.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Metal-EFH2FIFLEBMPGBEDN7MAU79U3.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/ImageIO-4ZHQI0Q26J9JOTSM7MHIHMTQR.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/_LocationEssentials-41ZW7LU65H615OS23957LXUDQ.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/MediaAccessibility-5TSX2G67U2NI26O6DNH7J0AB2.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreLocation-83WAMZRH1WWAPMRTYZNK28E75.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/OpenGLES-BLMWP5YR56NLMNLODFHI29QAI.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreTransferable-AIXUJC4MDJTKXSKXEN33FAEPV.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/UniformTypeIdentifiers-6MAO9MM2EYOIYIE107M8IF2W6.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreVideo-SLV9COV19QJQYDOUPUX8J8O8.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreMIDI-9LSH9NE9GCK0UUK5M3RJJCL6G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Symbols-5Q38RCQJWDS85WNTL5B8DDNFY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Network-9UX3HGLY4EN1IXXTN8QP80HAE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AudioToolbox-7BK952CEX5RJ10DYTWDK2TY40.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/OSLog-A17572M8SRGYOSCPMAXYLU74J.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Network-9UX3HGLY4EN1IXXTN8QP80HAE.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AVRouting-1H112J7QPFJFA5YFOYWBSK79P.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/IOSurface-5OP793V8A5UWI6TVQ77A6RY7W.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/FileProvider-C3XM1QQ9YKW4CFFEFEQP596IK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/UserNotifications-41XX8O5ZNHNCLFYMED6AHHUKK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/MediaAccessibility-5TSX2G67U2NI26O6DNH7J0AB2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/OpenGLES-BLMWP5YR56NLMNLODFHI29QAI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Metal-EFH2FIFLEBMPGBEDN7MAU79U3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/DataDetection-89KKSLY5XFJ3QTJXCE3AJI7DZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/UIUtilities-1FXUP01V5T748PHU6H1OJ2Q27.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreData-2BY7J5N3ZYW9Y90XARLJBZY9A.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Accessibility-EJ4JHAP3ABY178K8KNGV3RFXB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreVideo-SLV9COV19QJQYDOUPUX8J8O8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreLocation-83WAMZRH1WWAPMRTYZNK28E75.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreImage-463WSPB8K24ILQVIOMT6R0JC1.pcm
 
@@ -320,29 +332,38 @@ SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/CoreMedia-5LJ0T1ELR82E2P11C7Y9PA5WO.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AVRouting-1H112J7QPFJFA5YFOYWBSK79P.pcm
-
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/SwiftUICore-4KQRIBYCNYG6AIOXVX0HN36XS.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/MediaToolbox-ET381EX4NQTV1IH02BB1CFYR0.pcm
-
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/UIKit-8V168QNLQKR6GO5TUSZV2W61P.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/MediaToolbox-ET381EX4NQTV1IH02BB1CFYR0.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AVFAudio-YSISLQEEUYOWWKJOH3OWWQED.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AVFoundation-DL2LKBD1IVP9MUMPYYR4QORB7.pcm
 
+LinkAssetCatalog /Users/runner/work/lara-rpc/lara-rpc/src/lara/other/media.xcassets (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    builtin-linkAssetCatalog --thinned /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_output/thinned --thinned-dependencies /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_generated_info.plist_thinned --unthinned /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_output/unthinned --unthinned-dependencies /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_generated_info.plist_unthinned --output /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/InstallationBuildProductsLocation/Applications/lara.app --plist-output /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_generated_info.plist
+note: Emplaced /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/InstallationBuildProductsLocation/Applications/lara.app/Assets.car (in target 'lara' from project 'lara')
+note: Emplaced /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/InstallationBuildProductsLocation/Applications/lara.app/AppIcon76x76@2x~ipad.png (in target 'lara' from project 'lara')
+note: Emplaced /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/InstallationBuildProductsLocation/Applications/lara.app/AppIcon60x60@2x.png (in target 'lara' from project 'lara')
+
+ProcessInfoPlistFile /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/InstallationBuildProductsLocation/Applications/lara.app/Info.plist /Users/runner/work/lara-rpc/lara-rpc/src/lara/Info.plist (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    builtin-infoPlistUtility /Users/runner/work/lara-rpc/lara-rpc/src/lara/Info.plist -producttype com.apple.product-type.application -genpkginfo /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/InstallationBuildProductsLocation/Applications/lara.app/PkgInfo -expandbuildsettings -format binary -platform iphoneos -additionalcontentfile /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/assetcatalog_generated_info.plist -requiredArchitecture arm64e -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/InstallationBuildProductsLocation/Applications/lara.app/Info.plist
+
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Photos-B369XAES51EAMIWJF9OHFWQ5T.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/PDFKit-AMNPIIHYY5HAD9USAOR36NZP.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/SwiftUI-CK4FJWQY22VV8L5FW1XI6YDE9.pcm
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/WebKit-36XNL808ZN3C04U8J5HXBLSV8.pcm
 
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/AVKit-CL9V7GYBMSWR4Y9BX1C4US1CK.pcm
 
-SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/WebKit-36XNL808ZN3C04U8J5HXBLSV8.pcm
-
 SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/PhotosUI-YHCBO0XT9GW8UWAO6UPAJKGN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64e /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/SwiftUI-CK4FJWQY22VV8L5FW1XI6YDE9.pcm
 
 SwiftGeneratePch normal arm64e Compiling\ bridging\ header (in target 'lara' from project 'lara')
 
@@ -410,10 +431,264 @@ EmitSwiftModule normal arm64e (in target 'lara' from project 'lara')
     private func mgKeyBinding<T: Equatable>(_ keys: [String], type: T.Type = Int.self, defaultValue: T? = 0, enableValue: T? = 1) -> Binding<Bool>  {
                                                                                                                                ^
 
-SwiftCompile normal arm64e Compiling\ DesignStyle.swift,\ PartyUI.swift,\ RpcServer.swift,\ RpcView.swift,\ CreditsView.swift,\ OffsetManagementView.swift,\ SettingsView.swift,\ ContentView.swift,\ LogsView.swift,\ DirectoryView.swift,\ FileInfoSheet.swift,\ FileSystemHelpers.swift,\ FileView.swift,\ SantanderView.swift,\ respring.swift,\ DarkBoardExploreView.swift,\ DarkBoardView.swift,\ CCView.swift,\ dirtyZeroTweakArray.swift,\ dirtyZeroView.swift,\ LiquidGlassPreview.swift,\ LiquidGlassView.swift,\ GestaltFileView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/DesignStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/PartyUI.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcServer.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/CreditsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/OffsetManagementView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/SettingsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/ContentView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/LogsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/DirectoryView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileInfoSheet.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileSystemHelpers.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/SantanderView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/other/respring.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardExploreView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/CCView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/dirtyZero/dirtyZeroTweakArray.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/dirtyZero/dirtyZeroView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassPreview.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltFileView.swift (in target 'lara' from project 'lara')
-Failed frontend command:
-/Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeGalleryManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/passcode/PasscodeGalleryManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/laramgr.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/Logger.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/zipmgr.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/fetchkcache.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/getbmhash.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/helpers.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isdebugged.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/islcinstalled.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isunsupported.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/keepalive.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/resizetoapprox.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Extensions/VariableBlur.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Alertinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Exitinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Hapticinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Shareinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/AppInfoCell.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/GetLicenseDict.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LicenseView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LinkCreditCell.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/WelcomeSheet/WelcomeSheetRow.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/WelcomeSheet/WelcomeSheetView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/AppInfo.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/ButtonLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/FancyButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/NavigationLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/PrimaryButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/TinyButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/TranslucentButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Effects/FadeAnimation.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Effects/OverlayBackground.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/CompactAlert.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/InfoBadge.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/PlainAlert.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/TinyInfoPlatter.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/PlainToggle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/PlatterToggle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/TextFieldBackground.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/TextFieldButton.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/HeaderDropdown.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/HeaderLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/SectionPlatter.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/ThemedHeaderLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Terminal/TerminalHeader.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Terminal/TerminalPlatter.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/DesignStyle.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/PartyUI.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcServer.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/CreditsView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/OffsetManagementView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/SettingsView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/ContentView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/LogsView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/DirectoryView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileInfoSheet.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileSystemHelpers.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/SantanderView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/other/respring.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardExploreView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/CCView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/dirtyZero/dirtyZeroTweakArray.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/dirtyZero/dirtyZeroView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassPreview.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltFileView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeExploreView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeRepoView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SBCustomizerHandler.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SpringBoardView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/AppsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/CardView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/CustomView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/DecryptView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/FontPicker.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/JitView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/OTAView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/RemoteView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ScreenTimeView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ShowHiddenIconsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/SystemColor.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ToolsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/TweaksView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/VarCleanView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/WhitelistView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/lara.swift /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/GeneratedAssetSymbols.swift -supplementary-output-file-map /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/supplementaryOutputs-3 -emit-localized-strings -emit-localized-strings-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e -target arm64e-apple-ios16.0 -module-can-import-version DeveloperToolsSupport 23.40.26 23.40.26 -module-can-import-version SwiftUI 7.5.3 7.5.3 -module-can-import-version UIKit 9126.5.5.2 9126.5.5 -disable-cross-import-overlay-search -swift-module-cross-import AVKit /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AVKit.framework/Modules/AVKit.swiftcrossimport/SwiftUI.swiftoverlay -swift-module-cross-import AVKit /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/AVKit.framework/Modules/AVKit.swiftcrossimport/SwiftUI.swiftoverlay -swift-module-cross-import Darwin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/Darwin.swiftcrossimport/xlocale.swiftoverlay -swift-module-cross-import PhotosUI /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PhotosUI.framework/Modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay -swift-module-cross-import PhotosUI /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PhotosUI.framework/Modules/PhotosUI.swiftcrossimport/WidgetKit.swiftoverlay -swift-module-cross-import PhotosUI /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/PhotosUI.framework/Modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay -swift-module-cross-import PhotosUI /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/PhotosUI.framework/Modules/PhotosUI.swiftcrossimport/WidgetKit.swiftoverlay -swift-module-cross-import WebKit /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Cryptexes/OS/System/Library/Frameworks/WebKit.framework/Modules/WebKit.swiftcrossimport/SwiftUI.swiftoverlay -swift-module-cross-import WebKit /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/WebKit.framework/Modules/WebKit.swiftcrossimport/SwiftUI.swiftoverlay -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libTipKitMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#TipKitMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara-dependencies-1.json -debug-module-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.swiftmodule -enable-objc-interop -stack-check -sdk /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -I /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos -F /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/SwiftExplicitPrecompiledModules -swift-version 5 -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara_const_extract_protocols.json -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -default-isolation\=MainActor -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/runner/work/lara-rpc/lara-rpc/src -enable-anonymous-context-mangled-names -file-compilation-dir /Users/runner/work/lara-rpc/lara-rpc/src -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.5-23F81a-688ef53f1462e2c8f657fdc38a81448fee66e23052a0157c865c76b268046726.sdkstatcache -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-generated-files.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-own-target-headers.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-project-headers.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos/include -Xcc -I/Users/runner/work/lara-rpc/lara-rpc/src/lara -Xcc -I/Users/runner/work/lara-rpc/lara-rpc/src/lara/kexploit -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources-normal/arm64e -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/arm64e -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources -Xcc -DDEBUG\=1 -import-objc-header /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara-primary-Bridging-header.pch -no-auto-bridging-header-chaining -module-name lara -frontend-parseable-output -disable-clang-spi -clang-target arm64e-apple-ios26.5 -target-sdk-version 26.5 -target-sdk-name iphoneos26.5 -in-process-plugin-server-path /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/DesignStyle.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/PartyUI.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/RpcServer.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/RpcView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/CreditsView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/OffsetManagementView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/SettingsView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/ContentView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/LogsView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/DirectoryView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/FileInfoSheet.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/FileSystemHelpers.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/FileView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/SantanderView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/respring.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/DarkBoardExploreView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/DarkBoardView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/CCView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/dirtyZeroTweakArray.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/dirtyZeroView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/LiquidGlassPreview.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/LiquidGlassView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/GestaltFileView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/DesignStyle.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/PartyUI.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/RpcServer.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/RpcView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/CreditsView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/OffsetManagementView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/SettingsView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/ContentView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/LogsView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/DirectoryView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/FileInfoSheet.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/FileSystemHelpers.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/FileView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/SantanderView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/respring.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/DarkBoardExploreView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/DarkBoardView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/CCView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/dirtyZeroTweakArray.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/dirtyZeroView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/LiquidGlassPreview.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/LiquidGlassView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/GestaltFileView.o
+SwiftCompile normal arm64e Compiling\ WelcomeSheetView.swift,\ AppInfo.swift,\ ButtonLabel.swift,\ FancyButtonStyle.swift,\ NavigationLabel.swift,\ PrimaryButtonStyle.swift,\ TinyButtonStyle.swift,\ TranslucentButtonStyle.swift,\ FadeAnimation.swift,\ OverlayBackground.swift,\ CompactAlert.swift,\ InfoBadge.swift,\ PlainAlert.swift,\ TinyInfoPlatter.swift,\ PlainToggle.swift,\ PlatterToggle.swift,\ TextFieldBackground.swift,\ TextFieldButton.swift,\ HeaderDropdown.swift,\ HeaderLabel.swift,\ SectionPlatter.swift,\ ThemedHeaderLabel.swift,\ TerminalHeader.swift,\ TerminalPlatter.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/WelcomeSheet/WelcomeSheetView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/AppInfo.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/ButtonLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/FancyButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/NavigationLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/PrimaryButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/TinyButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/TranslucentButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Effects/FadeAnimation.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Effects/OverlayBackground.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/CompactAlert.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/InfoBadge.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/PlainAlert.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/TinyInfoPlatter.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/PlainToggle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/PlatterToggle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/TextFieldBackground.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/TextFieldButton.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/HeaderDropdown.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/HeaderLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/SectionPlatter.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/ThemedHeaderLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Terminal/TerminalHeader.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Terminal/TerminalPlatter.swift (in target 'lara' from project 'lara')
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/WelcomeSheet/WelcomeSheetView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
 
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/AppInfo.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/ButtonLabel.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/FancyButtonStyle.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/FancyButtonStyle.swift:12:16: warning: use of protocol 'Shape' as a type must be written 'any Shape'; this will be an error in a future Swift language mode
+    var shape: Shape
+               ^~~~~
+               any Shape
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/FancyButtonStyle.swift:16:92: warning: use of protocol 'Shape' as a type must be written 'any Shape'; this will be an error in a future Swift language mode
+    public init(color: Color = .accentColor, foregroundStyle: Color = .accentColor, shape: Shape = .rect(cornerRadius: cornerRad.component), useFullWidth: Bool = true) {
+                                                                                           ^~~~~
+                                                                                           any Shape
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/NavigationLabel.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/PrimaryButtonStyle.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/PrimaryButtonStyle.swift:12:16: warning: use of protocol 'Shape' as a type must be written 'any Shape'; this will be an error in a future Swift language mode
+    var shape: Shape
+               ^~~~~
+               any Shape
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/PrimaryButtonStyle.swift:16:92: warning: use of protocol 'Shape' as a type must be written 'any Shape'; this will be an error in a future Swift language mode
+    public init(color: Color = .accentColor, foregroundStyle: Color = .accentColor, shape: Shape = .rect(cornerRadius: cornerRad.component), useFullWidth: Bool = true) {
+                                                                                           ^~~~~
+                                                                                           any Shape
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/TinyButtonStyle.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/TranslucentButtonStyle.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/TranslucentButtonStyle.swift:12:16: warning: use of protocol 'Shape' as a type must be written 'any Shape'; this will be an error in a future Swift language mode
+    var shape: Shape
+               ^~~~~
+               any Shape
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/TranslucentButtonStyle.swift:16:92: warning: use of protocol 'Shape' as a type must be written 'any Shape'; this will be an error in a future Swift language mode
+    public init(color: Color = .accentColor, foregroundStyle: Color = .accentColor, shape: Shape = .rect(cornerRadius: cornerRad.component), useFullWidth: Bool = true) {
+                                                                                           ^~~~~
+                                                                                           any Shape
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Effects/FadeAnimation.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Effects/OverlayBackground.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/CompactAlert.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/InfoBadge.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/PlainAlert.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/TinyInfoPlatter.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/PlainToggle.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/PlatterToggle.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/TextFieldBackground.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/TextFieldBackground.swift:11:16: warning: use of protocol 'Shape' as a type must be written 'any Shape'; this will be an error in a future Swift language mode
+    var shape: Shape
+               ^~~~~
+               any Shape
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/TextFieldBackground.swift:15:63: warning: use of protocol 'Shape' as a type must be written 'any Shape'; this will be an error in a future Swift language mode
+    public init(foregroundStyle: Color = .accentColor, shape: Shape = .rect(cornerRadius: cornerRad.component), useFullWidth: Bool = true) {
+                                                              ^~~~~
+                                                              any Shape
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/TextFieldButton.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/HeaderDropdown.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/HeaderLabel.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/SectionPlatter.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/ThemedHeaderLabel.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Terminal/TerminalHeader.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Terminal/TerminalPlatter.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e Compiling\ IconThemeGalleryManager.swift,\ IconThemeManager.swift,\ PasscodeGalleryManager.swift,\ laramgr.swift,\ Logger.swift,\ zipmgr.swift,\ fetchkcache.swift,\ getbmhash.swift,\ helpers.swift,\ isdebugged.swift,\ islcinstalled.swift,\ isunsupported.swift,\ keepalive.swift,\ resizetoapprox.swift,\ VariableBlur.swift,\ Alertinator.swift,\ Exitinator.swift,\ Hapticinator.swift,\ Shareinator.swift,\ AppInfoCell.swift,\ GetLicenseDict.swift,\ LicenseView.swift,\ LinkCreditCell.swift,\ WelcomeSheetRow.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeGalleryManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/passcode/PasscodeGalleryManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/laramgr.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/Logger.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/zipmgr.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/fetchkcache.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/getbmhash.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/helpers.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isdebugged.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/islcinstalled.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isunsupported.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/keepalive.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/resizetoapprox.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Extensions/VariableBlur.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Alertinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Exitinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Hapticinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Shareinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/AppInfoCell.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/GetLicenseDict.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LicenseView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LinkCreditCell.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/WelcomeSheet/WelcomeSheetRow.swift (in target 'lara' from project 'lara')
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeGalleryManager.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeGalleryManager.swift:109:81: warning: main actor-isolated static property 'shared' can not be referenced from a nonisolated context
+    func downloadAndImport(_ theme: GalleryTheme, importer: IconThemeManager = .shared) async throws {
+                                                                                ^
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeManager.swift:186:16: note: static property declared here
+    static let shared = IconThemeManager()
+               ^
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeManager.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/passcode/PasscodeGalleryManager.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/laramgr.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/laramgr.swift:530:17: warning: initialization of immutable value 'fm' was never used; consider replacing with assignment to '_' or removing it
+            let fm = FileManager.default
+            ~~~~^~
+            _
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/laramgr.swift:532:17: warning: initialization of immutable value 'bundleFolder' was never used; consider replacing with assignment to '_' or removing it
+            let bundleFolder = "/private/var/containers/Bundle/Application"
+            ~~~~^~~~~~~~~~~~
+            _
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/Logger.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/Logger.swift:245:13: warning: variable 'text' was never mutated; consider changing to 'let' constant
+        var text = panding + chunk
+        ~~~ ^
+        let
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/Logger.swift:310:9: warning: result of 'try?' is unused
+        try? logfilehandle?.seekToEnd()
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/Logger.swift:333:9: warning: result of 'try?' is unused
+        try? logfilehandle?.seekToEnd()
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/zipmgr.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/zipmgr.swift:193:18: warning: immutable value 'z64off' was never used; consider replacing with '_' or removing it
+            let (z64off, z64rec) = try locateZIP64EOCD(eocdOffset: eocdOffset)
+                 ^~~~~~
+                 _
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/fetchkcache.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/getbmhash.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/helpers.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isdebugged.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/islcinstalled.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isunsupported.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/keepalive.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/keepalive.swift:70:36: warning: forming 'UnsafeRawPointer' to a variable of type 'T'; this is likely incorrect because 'T' may contain an object reference.
+        wavdata.append(Data(bytes: &v, count: MemoryLayout<T>.size))
+                                   ^
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/resizetoapprox.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Extensions/VariableBlur.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Alertinator.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Exitinator.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Hapticinator.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Shareinator.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/AppInfoCell.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/GetLicenseDict.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LicenseView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LinkCreditCell.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/WelcomeSheet/WelcomeSheetRow.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e Compiling\ DesignStyle.swift,\ PartyUI.swift,\ RpcServer.swift,\ RpcView.swift,\ CreditsView.swift,\ OffsetManagementView.swift,\ SettingsView.swift,\ ContentView.swift,\ LogsView.swift,\ DirectoryView.swift,\ FileInfoSheet.swift,\ FileSystemHelpers.swift,\ FileView.swift,\ SantanderView.swift,\ respring.swift,\ DarkBoardExploreView.swift,\ DarkBoardView.swift,\ CCView.swift,\ dirtyZeroTweakArray.swift,\ dirtyZeroView.swift,\ LiquidGlassPreview.swift,\ LiquidGlassView.swift,\ GestaltFileView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/DesignStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/PartyUI.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcServer.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/CreditsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/OffsetManagementView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/SettingsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/ContentView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/LogsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/DirectoryView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileInfoSheet.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileSystemHelpers.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/SantanderView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/other/respring.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardExploreView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/CCView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/dirtyZero/dirtyZeroTweakArray.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/dirtyZero/dirtyZeroView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassPreview.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltFileView.swift (in target 'lara' from project 'lara')
 SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/DesignStyle.swift (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     
@@ -425,17 +700,6 @@ SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI
 SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcServer.swift (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     
-/Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcServer.swift:698:29: error: value of optional type 'String?' must be unwrapped to refer to member 'split' of wrapped base type 'String'
-                let lines = dump.split(separator: "\n").count
-                            ^
-/Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcServer.swift:698:29: note: chain the optional using '?' to access member 'split' only for non-'nil' base values
-                let lines = dump.split(separator: "\n").count
-                            ^
-                                ?
-/Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcServer.swift:698:29: note: force-unwrap using '!' to abort execution if the optional value contains 'nil'
-                let lines = dump.split(separator: "\n").count
-                            ^
-                                !
 
 SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcView.swift (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
@@ -488,22 +752,10 @@ SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/o
 SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardExploreView.swift (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     
-/Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeGalleryManager.swift:109:81: warning: main actor-isolated static property 'shared' can not be referenced from a nonisolated context
-    func downloadAndImport(_ theme: GalleryTheme, importer: IconThemeManager = .shared) async throws {
-                                                                                ^
-/Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeManager.swift:186:16: note: static property declared here
-    static let shared = IconThemeManager()
-               ^
-/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardExploreView.swift:182:28: warning: no 'async' operations occur within 'await' expression
-                    Task { await onDownload() }
-                           ^
 
 SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardView.swift (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     
-/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardView.swift:443:22: warning: 'init(documentTypes:in:)' was deprecated in iOS 14.0
-        let picker = UIDocumentPickerViewController(documentTypes: documentTypes, in: .open)
-                     ^
 
 SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/CCView.swift (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
@@ -524,114 +776,8 @@ SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/t
 SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassView.swift (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     
-/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassView.swift:112:75: warning: cannot use default expression for inference of 'T.Type' because it is inferrable from parameters #1, #2, #3; this will be an error in a future Swift language mode
-    private func gpKeyBinding<T: Equatable>(_ key: String, type: T.Type = Bool.self, default: T? = false, enable: T? = true) -> Binding<Bool> {
-                                                                          ^
-/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassView.swift:112:100: warning: cannot use default expression for inference of 'T?' because it is inferrable from parameters #1, #2, #3; this will be an error in a future Swift language mode
-    private func gpKeyBinding<T: Equatable>(_ key: String, type: T.Type = Bool.self, default: T? = false, enable: T? = true) -> Binding<Bool> {
-                                                                                                   ^
-/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassView.swift:112:120: warning: cannot use default expression for inference of 'T?' because it is inferrable from parameters #1, #2, #3; this will be an error in a future Swift language mode
-    private func gpKeyBinding<T: Equatable>(_ key: String, type: T.Type = Bool.self, default: T? = false, enable: T? = true) -> Binding<Bool> {
-                                                                                                                       ^
 
 SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltFileView.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e Compiling\ IconThemeGalleryManager.swift,\ IconThemeManager.swift,\ PasscodeGalleryManager.swift,\ laramgr.swift,\ Logger.swift,\ zipmgr.swift,\ fetchkcache.swift,\ getbmhash.swift,\ helpers.swift,\ isdebugged.swift,\ islcinstalled.swift,\ isunsupported.swift,\ keepalive.swift,\ resizetoapprox.swift,\ VariableBlur.swift,\ Alertinator.swift,\ Exitinator.swift,\ Hapticinator.swift,\ Shareinator.swift,\ AppInfoCell.swift,\ GetLicenseDict.swift,\ LicenseView.swift,\ LinkCreditCell.swift,\ WelcomeSheetRow.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeGalleryManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/passcode/PasscodeGalleryManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/laramgr.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/Logger.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/zipmgr.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/fetchkcache.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/getbmhash.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/helpers.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isdebugged.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/islcinstalled.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isunsupported.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/keepalive.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/resizetoapprox.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Extensions/VariableBlur.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Alertinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Exitinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Hapticinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Shareinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/AppInfoCell.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/GetLicenseDict.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LicenseView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LinkCreditCell.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/WelcomeSheet/WelcomeSheetRow.swift (in target 'lara' from project 'lara')
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeGalleryManager.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeManager.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/passcode/PasscodeGalleryManager.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/laramgr.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/Logger.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/zipmgr.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/fetchkcache.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/getbmhash.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/helpers.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isdebugged.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/islcinstalled.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isunsupported.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/keepalive.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/resizetoapprox.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Extensions/VariableBlur.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Alertinator.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Exitinator.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Hapticinator.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Shareinator.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/AppInfoCell.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/GetLicenseDict.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LicenseView.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LinkCreditCell.swift (in target 'lara' from project 'lara')
-    cd /Users/runner/work/lara-rpc/lara-rpc/src
-    
-
-SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/WelcomeSheet/WelcomeSheetRow.swift (in target 'lara' from project 'lara')
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     
 
@@ -641,12 +787,182 @@ SwiftDriver\ Compilation\ Requirements lara normal arm64e com.apple.xcode.tools.
     cd /Users/runner/work/lara-rpc/lara-rpc/src
     builtin-Swift-Compilation-Requirements -- /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name lara -Onone @/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.SwiftFileList -DDEBUG -default-isolation\=MainActor -enable-bare-slash-regex -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -target arm64e-apple-ios16.0 -g -module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos -F /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos -emit-localized-strings -emit-localized-strings-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.5-23F81a-688ef53f1462e2c8f657fdc38a81448fee66e23052a0157c865c76b268046726.sdkstatcache -output-file-map /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-generated-files.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-own-target-headers.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-project-headers.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos/include -Xcc -I/Users/runner/work/lara-rpc/lara-rpc/src/lara -Xcc -I/Users/runner/work/lara-rpc/lara-rpc/src/lara/kexploit -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources-normal/arm64e -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/arm64e -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara-Swift.h -import-objc-header /Users/runner/work/lara-rpc/lara-rpc/src/lara/lara-Bridging-Header.h -working-directory /Users/runner/work/lara-rpc/lara-rpc/src -experimental-emit-module-separately -disable-cmo
 
+SwiftDriverJobDiscovery normal arm64e Compiling WelcomeSheetView.swift, AppInfo.swift, ButtonLabel.swift, FancyButtonStyle.swift, NavigationLabel.swift, PrimaryButtonStyle.swift, TinyButtonStyle.swift, TranslucentButtonStyle.swift, FadeAnimation.swift, OverlayBackground.swift, CompactAlert.swift, InfoBadge.swift, PlainAlert.swift, TinyInfoPlatter.swift, PlainToggle.swift, PlatterToggle.swift, TextFieldBackground.swift, TextFieldButton.swift, HeaderDropdown.swift, HeaderLabel.swift, SectionPlatter.swift, ThemedHeaderLabel.swift, TerminalHeader.swift, TerminalPlatter.swift (in target 'lara' from project 'lara')
+
+SwiftCompile normal arm64e Compiling\ GestaltView.swift,\ PasscodeExploreView.swift,\ PasscodeRepoView.swift,\ PasscodeView.swift,\ SBCustomizerHandler.swift,\ SpringBoardView.swift,\ AppsView.swift,\ CardView.swift,\ CustomView.swift,\ DecryptView.swift,\ FontPicker.swift,\ JitView.swift,\ OTAView.swift,\ RemoteView.swift,\ ScreenTimeView.swift,\ ShowHiddenIconsView.swift,\ SystemColor.swift,\ ToolsView.swift,\ TweaksView.swift,\ VarCleanView.swift,\ WhitelistView.swift,\ lara.swift,\ GeneratedAssetSymbols.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeExploreView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeRepoView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SBCustomizerHandler.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SpringBoardView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/AppsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/CardView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/CustomView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/DecryptView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/FontPicker.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/JitView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/OTAView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/RemoteView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ScreenTimeView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ShowHiddenIconsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/SystemColor.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ToolsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/TweaksView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/VarCleanView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/WhitelistView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/lara.swift /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'lara' from project 'lara')
+Failed frontend command:
+/Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeGalleryManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/darkboard/IconThemeManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/tweaks/passcode/PasscodeGalleryManager.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/laramgr.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/Logger.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/classes/zipmgr.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/fetchkcache.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/getbmhash.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/helpers.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isdebugged.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/islcinstalled.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/isunsupported.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/keepalive.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/funcs/resizetoapprox.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Extensions/VariableBlur.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Alertinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Exitinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Hapticinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Functions/Shareinator.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/AppInfoCell.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/GetLicenseDict.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LicenseView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/Settings/LinkCreditCell.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/WelcomeSheet/WelcomeSheetRow.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/WelcomeSheet/WelcomeSheetView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/App/AppInfo.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/ButtonLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/FancyButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/NavigationLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/PrimaryButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/TinyButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Buttons/TranslucentButtonStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Effects/FadeAnimation.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Effects/OverlayBackground.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/CompactAlert.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/InfoBadge.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/PlainAlert.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Indicators/TinyInfoPlatter.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/PlainToggle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/PlatterToggle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/TextFieldBackground.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Inputs/TextFieldButton.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/HeaderDropdown.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/HeaderLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/SectionPlatter.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Lists/ThemedHeaderLabel.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Terminal/TerminalHeader.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/Terminal/TerminalPlatter.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/DesignStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/PartyUI.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcServer.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/CreditsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/OffsetManagementView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/SettingsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/ContentView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/LogsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/DirectoryView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileInfoSheet.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileSystemHelpers.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/SantanderView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/other/respring.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardExploreView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/CCView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/dirtyZero/dirtyZeroTweakArray.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/dirtyZero/dirtyZeroView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassPreview.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltFileView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeExploreView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeRepoView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SBCustomizerHandler.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SpringBoardView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/AppsView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/CardView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/CustomView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/DecryptView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/FontPicker.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/JitView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/OTAView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/RemoteView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ScreenTimeView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ShowHiddenIconsView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/SystemColor.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ToolsView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/TweaksView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/VarCleanView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/WhitelistView.swift -primary-file /Users/runner/work/lara-rpc/lara-rpc/src/lara/lara.swift -primary-file /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/GeneratedAssetSymbols.swift -supplementary-output-file-map /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/supplementaryOutputs-4 -emit-localized-strings -emit-localized-strings-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e -target arm64e-apple-ios16.0 -module-can-import-version DeveloperToolsSupport 23.40.26 23.40.26 -module-can-import-version SwiftUI 7.5.3 7.5.3 -module-can-import-version UIKit 9126.5.5.2 9126.5.5 -disable-cross-import-overlay-search -swift-module-cross-import AVKit /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AVKit.framework/Modules/AVKit.swiftcrossimport/SwiftUI.swiftoverlay -swift-module-cross-import AVKit /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/AVKit.framework/Modules/AVKit.swiftcrossimport/SwiftUI.swiftoverlay -swift-module-cross-import Darwin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/Darwin.swiftcrossimport/xlocale.swiftoverlay -swift-module-cross-import PhotosUI /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PhotosUI.framework/Modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay -swift-module-cross-import PhotosUI /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PhotosUI.framework/Modules/PhotosUI.swiftcrossimport/WidgetKit.swiftoverlay -swift-module-cross-import PhotosUI /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/PhotosUI.framework/Modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay -swift-module-cross-import PhotosUI /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/PhotosUI.framework/Modules/PhotosUI.swiftcrossimport/WidgetKit.swiftoverlay -swift-module-cross-import WebKit /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Cryptexes/OS/System/Library/Frameworks/WebKit.framework/Modules/WebKit.swiftcrossimport/SwiftUI.swiftoverlay -swift-module-cross-import WebKit /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/WebKit.framework/Modules/WebKit.swiftcrossimport/SwiftUI.swiftoverlay -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -load-resolved-plugin /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libTipKitMacros.dylib\#/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#TipKitMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara-dependencies-1.json -debug-module-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.swiftmodule -enable-objc-interop -stack-check -sdk /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -I /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos -F /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/SwiftExplicitPrecompiledModules -swift-version 5 -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara_const_extract_protocols.json -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -default-isolation\=MainActor -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/runner/work/lara-rpc/lara-rpc/src -enable-anonymous-context-mangled-names -file-compilation-dir /Users/runner/work/lara-rpc/lara-rpc/src -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.5-23F81a-688ef53f1462e2c8f657fdc38a81448fee66e23052a0157c865c76b268046726.sdkstatcache -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-generated-files.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-own-target-headers.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/lara-project-headers.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos/include -Xcc -I/Users/runner/work/lara-rpc/lara-rpc/src/lara -Xcc -I/Users/runner/work/lara-rpc/lara-rpc/src/lara/kexploit -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources-normal/arm64e -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/arm64e -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources -Xcc -DDEBUG\=1 -import-objc-header /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara-primary-Bridging-header.pch -no-auto-bridging-header-chaining -module-name lara -frontend-parseable-output -disable-clang-spi -clang-target arm64e-apple-ios26.5 -target-sdk-version 26.5 -target-sdk-name iphoneos26.5 -in-process-plugin-server-path /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/GestaltView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/PasscodeExploreView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/PasscodeRepoView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/PasscodeView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/SBCustomizerHandler.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/SpringBoardView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/AppsView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/CardView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/CustomView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/DecryptView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/FontPicker.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/JitView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/OTAView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/RemoteView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/ScreenTimeView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/ShowHiddenIconsView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/SystemColor.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/ToolsView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/TweaksView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/VarCleanView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/WhitelistView.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.o -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/GeneratedAssetSymbols.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/GestaltView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/PasscodeExploreView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/PasscodeRepoView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/PasscodeView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/SBCustomizerHandler.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/SpringBoardView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/AppsView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/CardView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/CustomView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/DecryptView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/FontPicker.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/JitView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/OTAView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/RemoteView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/ScreenTimeView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/ShowHiddenIconsView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/SystemColor.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/ToolsView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/TweaksView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/VarCleanView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/WhitelistView.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.o -index-unit-output-path /lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/GeneratedAssetSymbols.o
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltView.swift:491:78: warning: cannot use default expression for inference of 'T.Type' because it is inferrable from parameters #1, #2, #3; this will be an error in a future Swift language mode
+    private func mgKeyBinding<T: Equatable>(_ keys: [String], type: T.Type = Int.self, defaultValue: T? = 0, enableValue: T? = 1) -> Binding<Bool>  {
+                                                                             ^
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltView.swift:491:107: warning: cannot use default expression for inference of 'T?' because it is inferrable from parameters #1, #2, #3; this will be an error in a future Swift language mode
+    private func mgKeyBinding<T: Equatable>(_ keys: [String], type: T.Type = Int.self, defaultValue: T? = 0, enableValue: T? = 1) -> Binding<Bool>  {
+                                                                                                          ^
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltView.swift:491:128: warning: cannot use default expression for inference of 'T?' because it is inferrable from parameters #1, #2, #3; this will be an error in a future Swift language mode
+    private func mgKeyBinding<T: Equatable>(_ keys: [String], type: T.Type = Int.self, defaultValue: T? = 0, enableValue: T? = 1) -> Binding<Bool>  {
+                                                                                                                               ^
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeExploreView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeRepoView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SBCustomizerHandler.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SBCustomizerHandler.swift:360:17: warning: variable 'plist' was never mutated; consider changing to 'let' constant
+            var plist = setColor(list: originalPlist, color: color, blur: blur)
+            ~~~ ^
+            let
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SpringBoardView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SpringBoardView.swift:98:60: warning: non-constant range: argument must be an integer literal
+                                ForEach(0..<option.options.count) { ind in
+                                                           ^
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SpringBoardView.swift:266:37: warning: initialization of immutable value 'replacementCar' was never used; consider replacing with assignment to '_' or removing it
+                                let replacementCar = try Data(contentsOf: url)
+                                ~~~~^~~~~~~~~~~~~~
+                                _
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/AppsView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/CardView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/CustomView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/DecryptView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/FontPicker.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/FontPicker.swift:539:45: warning: result of call to 'run(resultType:body:)' is unused
+                            await MainActor.run {
+                                            ^   ~
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/FontPicker.swift:592:25: warning: result of call to 'run(resultType:body:)' is unused
+        await MainActor.run { downloading.insert(font.url) }
+                        ^   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/FontPicker.swift:617:25: warning: result of call to 'run(resultType:body:)' is unused
+        await MainActor.run { downloading.insert(emoji.url) }
+                        ^   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/JitView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/OTAView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/RemoteView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ScreenTimeView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ShowHiddenIconsView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/SystemColor.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ToolsView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/TweaksView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/VarCleanView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/VarCleanView.swift:148:13: warning: main actor-isolated global function 'loadvarcleangroups()' cannot be called from outside of the actor; this is an error in the Swift 6 language mode
+            loadvarcleangroups()
+            ^~~~~~~~~~~~~~~~~~~~
+            await 
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/WhitelistView.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/lara.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/lara.swift:31:10: error: cannot use mutating member on immutable value: 'line' is a 'let' constant
+    line.withUTF8 { buf in
+    ~~~~ ^
+/Users/runner/work/lara-rpc/lara-rpc/src/lara/lara.swift:30:5: note: change 'let' to 'var' to make it mutable
+    let line = "[\(Int(time(nil)))] \(s)\n"
+    ^~~
+    var
+
+SwiftCompile normal arm64e /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+
+SwiftMergeGeneratedHeaders /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/lara-Swift.h /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara-Swift.h (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    builtin-swiftHeaderTool -arch arm64e /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara-Swift.h -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/lara-Swift.h
+
+SwiftDriverJobDiscovery normal arm64e Compiling IconThemeGalleryManager.swift, IconThemeManager.swift, PasscodeGalleryManager.swift, laramgr.swift, Logger.swift, zipmgr.swift, fetchkcache.swift, getbmhash.swift, helpers.swift, isdebugged.swift, islcinstalled.swift, isunsupported.swift, keepalive.swift, resizetoapprox.swift, VariableBlur.swift, Alertinator.swift, Exitinator.swift, Hapticinator.swift, Shareinator.swift, AppInfoCell.swift, GetLicenseDict.swift, LicenseView.swift, LinkCreditCell.swift, WelcomeSheetRow.swift (in target 'lara' from project 'lara')
+
+Copy /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos/lara.swiftmodule/arm64e-apple-ios.swiftmodule /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.swiftmodule (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.swiftmodule /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos/lara.swiftmodule/arm64e-apple-ios.swiftmodule
+
+Copy /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos/lara.swiftmodule/arm64e-apple-ios.swiftdoc /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.swiftdoc (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.swiftdoc /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos/lara.swiftmodule/arm64e-apple-ios.swiftdoc
+
+Copy /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos/lara.swiftmodule/arm64e-apple-ios.abi.json /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.abi.json (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/lara.abi.json /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/BuildProductsPath/Debug-iphoneos/lara.swiftmodule/arm64e-apple-ios.abi.json
+
+ScanDependencies /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/vnode.o /Users/runner/work/lara-rpc/lara-rpc/src/lara/kexploit/pe/vnode.m normal arm64e objective-c com.apple.compilers.llvm.clang.1_0.compiler (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+    Using response file: /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/e6072d4f65d7061329687fe24e3d63a7-common-args.resp
+    
+    builtin-ScanDependencies -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/vnode.o.scan -- /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -ivfsstatcache /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.5-23F81a-688ef53f1462e2c8f657fdc38a81448fee66e23052a0157c865c76b268046726.sdkstatcache -target arm64e-apple-ios16.0 -fmessage-length\=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit\=0 -fno-color-diagnostics -fmodules-prune-interval\=86400 -fmodules-prune-after\=345600 -fbuild-session-file\=/Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror\=non-modular-include-in-framework-module -Wno-trigraphs -Wno-missing-field-initializers -Wno-missing-prototypes -Werror\=return-type -Wdocumentation -Wunreachable-code -Wquoted-include-in-framework-header -Wno-implicit-atomic-properties -Werror\=deprecated-objc-isa-usage -Wno-objc-interface-ivars -Werror\=objc-root-class -Wno-arc-repeated-use-of-weak -Wimplicit-retain-self -Wduplicate-method-match -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wno-float-conversion -Wnon-literal-null-conversion -Wobjc-literal-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wdeprecated-implementations -Wno-implicit-fallthrough -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -Wno-sign-conversion -Winfinite-recursion -Wcomma -Wblock-capture-autoreleasing -Wstrict-prototypes -Wno-semicolon-before-method-body -Wunguarded-availability @/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/e6072d4f65d7061329687fe24e3d63a7-common-args.resp -MMD -MT dependencies -MF /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/vnode.d --serialize-diagnostics /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/vnode.dia -c /Users/runner/work/lara-rpc/lara-rpc/src/lara/kexploit/pe/vnode.m -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/vnode.o
+
+ScanDependencies /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/vm.o /Users/runner/work/lara-rpc/lara-rpc/src/lara/kexploit/TaskRop/vm.m normal arm64e objective-c com.apple.compilers.llvm.clang.1_0.compiler (in target 'lara' from project 'lara')
+    cd /Users/runner/work/lara-rpc/lara-rpc/src
+    
+    Using response file: /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/e6072d4f65d7061329687fe24e3d63a7-common-args.resp
+    
+    builtin-ScanDependencies -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/vm.o.scan -- /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -ivfsstatcache /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphoneos26.5-23F81a-688ef53f1462e2c8f657fdc38a81448fee66e23052a0157c865c76b268046726.sdkstatcache -target arm64e-apple-ios16.0 -fmessage-length\=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit\=0 -fno-color-diagnostics -fmodules-prune-interval\=86400 -fmodules-prune-after\=345600 -fbuild-session-file\=/Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror\=non-modular-include-in-framework-module -Wno-trigraphs -Wno-missing-field-initializers -Wno-missing-prototypes -Werror\=return-type -Wdocumentation -Wunreachable-code -Wquoted-include-in-framework-header -Wno-implicit-atomic-properties -Werror\=deprecated-objc-isa-usage -Wno-objc-interface-ivars -Werror\=objc-root-class -Wno-arc-repeated-use-of-weak -Wimplicit-retain-self -Wduplicate-method-match -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wno-float-conversion -Wnon-literal-null-conversion -Wobjc-literal-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wdeprecated-implementations -Wno-implicit-fallthrough -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -Wno-sign-conversion -Winfinite-recursion -Wcomma -Wblock-capture-autoreleasing -Wstrict-prototypes -Wno-semicolon-before-method-body -Wunguarded-availability @/Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/e6072d4f65d7061329687fe24e3d63a7-common-args.resp -MMD -MT dependencies -MF /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/vm.d --serialize-diagnostics /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/vm.dia -c /Users/runner/work/lara-rpc/lara-rpc/src/lara/kexploit/TaskRop/vm.m -o /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/Objects-normal/arm64e/vm.o
+
 note: Run script build phase 'Force Sign Embedded Dylibs' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'lara' from project 'lara')
 ** ARCHIVE FAILED **
 
 
 The following build commands failed:
-	SwiftCompile normal arm64e Compiling\ DesignStyle.swift,\ PartyUI.swift,\ RpcServer.swift,\ RpcView.swift,\ CreditsView.swift,\ OffsetManagementView.swift,\ SettingsView.swift,\ ContentView.swift,\ LogsView.swift,\ DirectoryView.swift,\ FileInfoSheet.swift,\ FileSystemHelpers.swift,\ FileView.swift,\ SantanderView.swift,\ respring.swift,\ DarkBoardExploreView.swift,\ DarkBoardView.swift,\ CCView.swift,\ dirtyZeroTweakArray.swift,\ dirtyZeroView.swift,\ LiquidGlassPreview.swift,\ LiquidGlassView.swift,\ GestaltFileView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/UI/DesignStyle.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/PartyUI/PartyUI.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcServer.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/CreditsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/OffsetManagementView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/settings/SettingsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/ContentView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/app/LogsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/DirectoryView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileInfoSheet.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileSystemHelpers.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/FileView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/fm/SantanderView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/other/respring.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardExploreView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/darkboard/DarkBoardView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/broken/CCView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/dirtyZero/dirtyZeroTweakArray.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/dirtyZero/dirtyZeroView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassPreview.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/liquidglass/LiquidGlassView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltFileView.swift (in target 'lara' from project 'lara')
-	SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/rpc/RpcServer.swift (in target 'lara' from project 'lara')
+	SwiftCompile normal arm64e Compiling\ GestaltView.swift,\ PasscodeExploreView.swift,\ PasscodeRepoView.swift,\ PasscodeView.swift,\ SBCustomizerHandler.swift,\ SpringBoardView.swift,\ AppsView.swift,\ CardView.swift,\ CustomView.swift,\ DecryptView.swift,\ FontPicker.swift,\ JitView.swift,\ OTAView.swift,\ RemoteView.swift,\ ScreenTimeView.swift,\ ShowHiddenIconsView.swift,\ SystemColor.swift,\ ToolsView.swift,\ TweaksView.swift,\ VarCleanView.swift,\ WhitelistView.swift,\ lara.swift,\ GeneratedAssetSymbols.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/mobilegestalt/GestaltView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeExploreView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeRepoView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/passcode/PasscodeView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SBCustomizerHandler.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/sbcustomizer/SpringBoardView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/AppsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/CardView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/CustomView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/DecryptView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/FontPicker.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/JitView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/OTAView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/RemoteView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ScreenTimeView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ShowHiddenIconsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/SystemColor.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/ToolsView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/TweaksView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/VarCleanView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/views/tweaks/WhitelistView.swift /Users/runner/work/lara-rpc/lara-rpc/src/lara/lara.swift /Users/runner/Library/Developer/Xcode/DerivedData/lara-duseqjkitbypvmboqohfhbrbhned/Build/Intermediates.noindex/ArchiveIntermediates/lara/IntermediateBuildFilesPath/lara.build/Debug-iphoneos/lara.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'lara' from project 'lara')
+	SwiftCompile normal arm64e /Users/runner/work/lara-rpc/lara-rpc/src/lara/lara.swift (in target 'lara' from project 'lara')
 	Archiving project lara with scheme lara
 (3 failures)
