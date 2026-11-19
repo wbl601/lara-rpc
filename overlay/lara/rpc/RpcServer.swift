@@ -476,7 +476,7 @@ final class RpcServer {
                 }
                 // 主线程万一被卡住也不能把 RPC 请求线程永久拖死，3 秒后放弃。
                 if sem.wait(timeout: .now() + 3) == .timedOut {
-                    return (200, ["count": -1, "lines": ["(applog) main thread busy"])
+                    return (200, ["count": -1, "lines": ["(applog) main thread busy"]])
                 }
             }
             let tail = all.count > n ? Array(all.suffix(n)) : all
