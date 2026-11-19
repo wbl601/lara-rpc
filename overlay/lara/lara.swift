@@ -27,6 +27,11 @@ struct lara: App {
     @State private var selectedtab: taboptions = .applying
     
     init() {
+        // 第一件事就先起看门狗，早于任何可能阻塞的初始化。
+        // 白屏时整个 RPC 服务都不响应，只有它能告诉我主线程到底卡在哪一步
+        // （独立线程应答 + 主线程心跳，见 RpcServer.swift 里的 BootServer）。
+        BootServer.shared.startAndBeat()
+
         #if DEBUG
         weonadebugbuild_pjbweouttahereexclamationmark = true
         #endif
@@ -106,13 +111,26 @@ struct lara: App {
                 IconThemeFixupView()
             }
             .onAppear {
+                BootServer.shared.mark("view onAppear")
                 if !isunsupported() {
-                    init_offsets()
-                    offsets_init()
-                    iconthememgr.startPendingFixupIfPossible()
-                    // beautiful name root
-                    // thanks
-                    mgr.hasOffsets = emergencyfixfunctiontobereplacedlateronquestionmark()
+                    // 内核偏移解析原来直接在主线程同步跑。它要扫 kernelcache 的符号表，
+                    // 正常几百毫秒，异常时可能长时间不返回 —— 主线程一卡就是白屏：
+                    // UI 停在最后一帧、RPC 也不响应，现象和「进程被系统冻结」一模一样，
+                    // 只能靠重启手机恢复。挪到后台后，慢只是功能晚点可用，不会整屏白。
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        BootServer.shared.mark("offsets begin")
+                        init_offsets()
+                        offsets_init()
+                        BootServer.shared.mark("offsets done")
+                        DispatchQueue.main.async {
+                            BootServer.shared.mark("offsets applied")
+                            iconthememgr.startPendingFixupIfPossible()
+                            // beautiful name root
+                            // thanks
+                            mgr.hasOffsets = emergencyfixfunctiontobereplacedlateronquestionmark()
+                            BootServer.shared.mark("hasOffsets=\(mgr.hasOffsets)")
+                        }
+                    }
                 } else {
                     Alertinator.shared.alert(title: "This device is not supported!", body: "We apologize, but this device is currently not supported by Lara. Possible reasons: \n- You are on an unsupported iOS version (Supported: iOS 16.0 - iOS 18.7.1, iOS 26.0 - iOS 26.0.1) \n- Your device has MIE (A19+ or M5+) \n- A debugger is attached.", actionLabel: "Exit App", action: { exitinator() })
                 }

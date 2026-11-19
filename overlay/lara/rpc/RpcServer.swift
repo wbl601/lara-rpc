@@ -145,6 +145,7 @@ final class RpcServer {
     @discardableResult
     func start(port: UInt16) -> String {
         if isRunning { return "already running on port \(listenFD)" }
+        BootServer.shared.mark("rpc start port=\(port)")
 
         stdoutPath = resolveLogPath()
 
@@ -222,6 +223,7 @@ final class RpcServer {
         thread = t
 
         log("listening on 0.0.0.0:\(port)")
+        BootServer.shared.mark("rpc listening \(port)")
         return "ok"
     }
 
@@ -798,6 +800,228 @@ final class RpcServer {
                 out.append(c)
                 i = s.index(after: i)
             }
+        }
+        return out
+    }
+}
+
+// MARK: - 启动看门狗
+
+/// 专门用来诊断「白屏」的最小 HTTP 服务，默认 8081。
+///
+/// 白屏有两种完全不同的成因，在 PC 侧看起来一模一样（HTTP 超时、设备侧 socket
+/// 仍在内核里 listen、三次握手还能成功），只能靠猜和重启手机：
+///   A. 主线程被卡住（内核偏移解析、同步 UIKit 操作）——进程是健康的，只是 UI 死
+///   B. 整个进程被系统冻结（后台挂起 / 内存压力）——SIGSTOP，什么都不会跑
+///
+/// 区分办法就是这里的 `/boot`：它由**独立线程**应答，同时记录主线程心跳。
+/// 主线程卡住时它可以正常响应，且 `beat_age` 会持续增大（A）；
+/// 进程被冻结时连它都连不上（B）。B 是系统层的事，改代码没用，只能避免触发。
+///
+/// 所以它在 `App.init()` 的第一行启动：不碰 UIKit、不碰 offsets、不碰 RpcServer，
+/// 只依赖 Foundation 和 BSD socket。主线程再怎么卡都影响不到它。
+final class BootServer {
+    static let shared = BootServer()
+
+    private var listenFD: Int32 = -1
+    private var booting = false
+    private var marks: [String] = []
+    private let lock = NSLock()
+    private var lastBeat: TimeInterval = 0
+    private var bootAt: TimeInterval = 0
+    private var logPath = ""
+
+    private func now() -> TimeInterval { Date().timeIntervalSince1970 }
+
+    private func clock() -> String {
+        let f = DateFormatter()
+        f.dateFormat = "HH:mm:ss.SSS"
+        return f.string(from: Date())
+    }
+
+    private func docPath(_ n: String) -> String {
+        let d = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        return (d ?? URL(fileURLWithPath: NSTemporaryDirectory())).appendingPathComponent(n).path
+    }
+
+    /// 打点。同时落盘：进程万一被冻结甚至被杀，HTTP 就什么都读不到了，
+    /// 只有 boot.log 能在下一次启动时告诉我上次停在哪一步。
+    func mark(_ s: String) {
+        let line = "[\(clock())] \(s)"
+        lock.lock()
+        marks.append(line)
+        if marks.count > 300 { marks.removeFirst(marks.count - 300) }
+        let p = logPath
+        lock.unlock()
+        guard !p.isEmpty else { return }
+        if let h = FileHandle(forWritingAtPath: p) {
+            h.seekToEndOfFile()
+            h.write(Data((line + "\n").utf8))
+            try? h.close()
+        }
+    }
+
+    /// 主线程心跳：只在主线程执行。主线程一卡心跳就停，`beat_age` 会一直涨。
+    private func beat() {
+        lock.lock()
+        lastBeat = now()
+        lock.unlock()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.beat()
+        }
+    }
+
+    func startAndBeat() {
+        lock.lock()
+        if booting { lock.unlock(); return }
+        booting = true
+        bootAt = now()
+        logPath = docPath("boot.log")
+        lock.unlock()
+
+        FileManager.default.createFile(atPath: logPath, contents: nil)
+        mark("--- app launch ---")
+        let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
+        let b = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
+        mark("build \(v).\(b)")
+
+        let t = Thread { [weak self] in self?.listenLoop() }
+        t.name = "lara-boot"
+        t.stackSize = 512 * 1024
+        t.start()
+
+        beat()
+    }
+
+    private func listenLoop() {
+        let fd = socket(AF_INET, SOCK_STREAM, 0)
+        if fd < 0 { mark("boot: socket() errno=\(errno)"); return }
+        var yes: Int32 = 1
+        setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, socklen_t(MemoryLayout<Int32>.size))
+
+        var addr = sockaddr_in()
+        addr.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        addr.sin_family = sa_family_t(AF_INET)
+        addr.sin_port = (8081 as UInt16).bigEndian
+        addr.sin_addr.s_addr = inet_addr("0.0.0.0")
+        let bound = withUnsafePointer(to: &addr) { p -> Int32 in
+            p.withMemoryRebound(to: sockaddr.self, capacity: 1) { sp in
+                bind(fd, sp, socklen_t(MemoryLayout<sockaddr_in>.size))
+            }
+        }
+        if bound != 0 { mark("boot: bind() errno=\(errno)"); close(fd); return }
+        if listen(fd, 16) != 0 { mark("boot: listen() errno=\(errno)"); close(fd); return }
+        listenFD = fd
+        mark("boot: listening 8081")
+
+        while true {
+            let c = accept(fd, nil, nil)
+            if c < 0 {
+                if errno == EINTR { continue }
+                usleep(50_000)
+                continue
+            }
+            autoreleasepool { serve(c) }
+            close(c)
+        }
+    }
+
+    private func serve(_ c: Int32) {
+        var buf = [UInt8](repeating: 0, count: 8192)
+        var total = 0
+        while total < buf.count {
+            let n = read(c, &buf[total], buf.count - total)
+            if n <= 0 { break }
+            total += n
+            if total > 4, String(decoding: buf[0..<total], as: UTF8.self).contains("\r\n\r\n") { break }
+        }
+        guard total > 0 else { return }
+
+        let head = String(decoding: buf[0..<total], as: UTF8.self)
+        let firstLine = head.components(separatedBy: "\r\n").first ?? ""
+        let parts = firstLine.split(separator: " ")
+        guard parts.count >= 2 else { return }
+        var path = String(parts[1])
+        var query = ""
+        if let q = path.firstIndex(of: "?") {
+            query = String(path[path.index(after: q)...])
+            path = String(path[path.startIndex..<q])
+        }
+        let p = parseQuery(query)
+
+        var out: [String: Any] = [:]
+        switch path {
+        case "/boot":
+            lock.lock()
+            let ms = marks
+            let b = bootAt
+            let lb = lastBeat
+            lock.unlock()
+            let n = now()
+            out = [
+                "boot_age": Int(n - b),
+                "beat_age": lb > 0 ? Int(n - lb) : -1,
+                "marks": ms,
+            ]
+        case "/log":
+            let n = Int(p["n"] ?? "80") ?? 80
+            out = [
+                "boot": tailText(logPath, n),
+                "rc_diag": tailText(docPath("rc-diag.log"), n),
+                "lara": tailText(docPath("lara.log"), n),
+            ]
+        case "/ls":
+            let d = p["p"] ?? "/"
+            let items = (try? FileManager.default.contentsOfDirectory(atPath: d)) ?? []
+            out = ["p": d, "items": items.sorted()]
+        case "/file":
+            let f = p["p"] ?? ""
+            if f.isEmpty {
+                out = ["error": "missing p"]
+            } else {
+                out = ["p": f, "lines": tailText(f, Int(p["n"] ?? "200") ?? 200)]
+            }
+        default:
+            out = ["error": "unknown",
+                   "paths": ["/boot", "/log", "/ls?p=", "/file?p=&n="]]
+        }
+
+        let data = (try? JSONSerialization.data(withJSONObject: out, options: [.sortedKeys]))
+            ?? Data("{}".utf8)
+        var head2 = "HTTP/1.1 200 OK\r\n"
+        head2 += "Content-Type: application/json; charset=utf-8\r\n"
+        head2 += "Content-Length: \(data.count)\r\n"
+        head2 += "Connection: close\r\n\r\n"
+        var blob = Data(head2.utf8)
+        blob.append(data)
+        let bytes = [UInt8](blob)
+        var off = 0
+        while off < bytes.count {
+            let w = bytes.withUnsafeBytes { raw -> Int in
+                Darwin.write(c, raw.baseAddress!.advanced(by: off), bytes.count - off)
+            }
+            if w <= 0 { break }
+            off += w
+        }
+    }
+
+    private func tailText(_ path: String, _ n: Int) -> [String] {
+        guard let h = FileHandle(forReadingAtPath: path) else { return [] }
+        defer { try? h.close() }
+        let size = (try? h.seekToEnd()) ?? 0
+        let start = size > 262144 ? size - 262144 : 0
+        try? h.seek(toOffset: start)
+        guard let d = try? h.readToEnd(), let s = String(data: d, encoding: .utf8) else { return [] }
+        let lines = s.components(separatedBy: "\n").filter { !$0.isEmpty }
+        return lines.count > n ? Array(lines.suffix(n)) : lines
+    }
+
+    private func parseQuery(_ q: String) -> [String: String] {
+        var out: [String: String] = [:]
+        for pair in q.split(separator: "&") {
+            let kv = pair.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: false)
+            guard kv.count == 2, let k = String(kv[0]).removingPercentEncoding else { continue }
+            out[k] = String(kv[1]).removingPercentEncoding ?? String(kv[1])
         }
         return out
     }
