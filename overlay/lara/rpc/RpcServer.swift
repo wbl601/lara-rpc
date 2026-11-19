@@ -616,7 +616,7 @@ final class RpcServer {
 
         // ---- 以下都是远程原语，必须先注入成功 ----
 
-        case "/c", "/s", "/str", "/msg", "/msg_main", "/rd", "/rd64":
+        case "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
                               "inject": injectStatus()])
@@ -689,6 +689,16 @@ final class RpcServer {
                 let ret = remote_msg_main(r, obj, sel, a0, a1, a2, a3)
                 return (200, ["ret": hexString(ret)])
 
+            // 一次征用主线程拿整棵 UI 树。逐层 /msg_main 追问每次 ~0.4s，
+            // 几十个节点就几十秒，没法用。详见 RemoteCall.m 里 remote_ui_dump 的说明。
+            case "/ui":
+                let depth = Int32(params["depth"] ?? "6") ?? 6
+                let maxNodes = Int32(params["max"] ?? "200") ?? 200
+                let dump = remote_ui_dump(r, depth, maxNodes)
+                let lines = dump.split(separator: "\n").count
+                return (200, ["dump": dump, "lines": lines,
+                              "depth": Int(depth), "max": Int(maxNodes)])
+
             case "/rd":
                 let p = hex(params["p"])
                 guard p != 0 else { return (400, ["error": "missing p"]) }
@@ -708,7 +718,7 @@ final class RpcServer {
             return (404, ["error": "unknown path", "paths": ["/health", "/inject", "/inject_status",
                                                            "/reset", "/stdout", "/applog", "/diag", "/timeout",
                                                            "/pid", "/launch", "/log", "/stop",
-                                                           "/c", "/s", "/str", "/msg", "/msg_main", "/rd", "/rd64"]])
+                                                           "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64"]])
         }
     }
 
