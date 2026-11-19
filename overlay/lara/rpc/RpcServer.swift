@@ -42,6 +42,35 @@ final class RpcServer {
 
     private(set) var isRunning = false
 
+    /// stdout 被重定向到容器里的这个文件，/stdout 接口读它。
+    private var stdoutPath: String?
+
+    /// 把 C 层的 stdout/stderr 重定向到容器内的文件。
+    /// 为什么必须做：lara 的 RemoteCall 全程用 printf 打关键调试信息 ——
+    /// signState 的 pc_raw/pc_signed、异常类型 exc 和 code、每次远程调用的 pcAddr。
+    /// 这些信息在「非 Xcode 启动」时直接被系统丢掉，注入失败时等于闭着眼睛调。
+    private func redirectStdout() {
+        guard stdoutPath == nil else { return }
+        guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let p = dir.appendingPathComponent("rc-stdout.log").path
+        stdoutPath = p
+        freopen(p, "a", stdout)
+        freopen(p, "a", stderr)
+        setvbuf(stdout, nil, _IOLBF, 0)
+        setvbuf(stderr, nil, _IOLBF, 0)
+    }
+
+    private func readStdoutTail(_ n: Int) -> [String] {
+        guard let p = stdoutPath, let h = FileHandle(forReadingAtPath: p) else { return [] }
+        defer { try? h.close() }
+        let size = (try? h.seekToEnd()) ?? 0
+        let start = size > 131072 ? size - 131072 : 0
+        try? h.seek(toOffset: start)
+        guard let d = try? h.readToEnd(), let s = String(data: d, encoding: .utf8) else { return [] }
+        let lines = s.components(separatedBy: "\n").filter { !$0.isEmpty }
+        return lines.count > n ? Array(lines.suffix(n)) : lines
+    }
+
     /// rc 会被注入线程改写，路由线程也会读，统一从锁里取。
     private func currentRC() -> RemoteCall? {
         lock.lock()
@@ -81,6 +110,8 @@ final class RpcServer {
     @discardableResult
     func start(port: UInt16) -> String {
         if isRunning { return "already running on port \(listenFD)" }
+
+        redirectStdout()
 
         let fd = socket(AF_INET, SOCK_STREAM, 0)
         if fd < 0 { return "socket() failed errno=\(errno)" }
@@ -228,7 +259,7 @@ final class RpcServer {
 
     /// 立刻返回，真正的注入在后台线程做。UI 不会因此卡住。
     @discardableResult
-    func beginInject(_ proc: String) -> String {
+    func beginInject(_ proc: String, mig: Bool = false) -> String {
         lock.lock()
         if injectState == "injecting" {
             let s = "already injecting \(injectProc)"
@@ -241,16 +272,16 @@ final class RpcServer {
         injectStarted = Date().timeIntervalSince1970
         lock.unlock()
 
-        log("开始注入 \(proc)（后台线程）")
+        log("开始注入 \(proc)（后台线程，migBypass=\(mig)）")
 
-        let t = Thread { [weak self] in self?.doInject(proc) }
+        let t = Thread { [weak self] in self?.doInject(proc, mig: mig) }
         t.name = "lara-rpc-inject"
         t.stackSize = 1 << 21
         t.start()
         return "injecting"
     }
 
-    private func doInject(_ proc: String) {
+    private func doInject(_ proc: String, mig: Bool) {
         if currentRC() != nil { detach() }
 
         guard laramgr.shared.dsready else {
@@ -269,7 +300,10 @@ final class RpcServer {
         log("目标 \(proc) 在运行，pid=\(pid)，开始建会话")
 
         // 与 laramgr 里同样的调用方式：init 失败时返回 nil，错误原因用类方法取
-        let inst: RemoteCall? = RemoteCall(process: proc, useMigFilterBypass: false)
+        // useMigFilterBypass 对微信有实际意义：它开了 MIG 消息过滤，
+        // 设异常端口这一步可能被拦。lara 自己注 SpringBoard 用 false 就够，
+        // 但第三方 App 防护更重，留成可切换。
+        let inst: RemoteCall? = RemoteCall(process: proc, useMigFilterBypass: mig)
         guard let inst = inst else {
             finishInject("failed", RemoteCall.lastInitError() ?? "unknown")
             return
@@ -409,8 +443,30 @@ final class RpcServer {
 
         case "/inject":
             let proc = params["proc"] ?? "WeChat"
-            let r = beginInject(proc)
+            let mig = (params["mig"] ?? "0") == "1"
+            let r = beginInject(proc, mig: mig)
             return (200, ["result": r, "inject": injectStatus()])
+
+        // C 层 printf 的尾巴。注入排查完全靠它：异常类型 exc、code、fault 时真实的 pc。
+        // （lara 的 lastError 在格式化前把 threadState.__pc 改成了 lr 标记，
+        //   所以外面看到的 "pc=0x201" 是假的，真值只在这份日志里。）
+        case "/stdout":
+            let n = Int(params["n"] ?? "150") ?? 150
+            return (200, ["path": stdoutPath ?? "(未重定向)", "lines": readStdoutTail(n)])
+
+        // 清掉卡死的 injecting 状态。改成后台线程注入之后，进程被挂起时状态会
+        // 永远停在 injecting，没有这个接口就只能重启 app（还得重跑 exploit）。
+        case "/reset":
+            lock.lock()
+            var s = injectState
+            if injectState != "injecting" {
+                injectState = "idle"
+                injectMessage = ""
+                injectProc = ""
+                s = "idle"
+            }
+            lock.unlock()
+            return (200, ["ok": true, "state": s])
 
         case "/inject_status":
             return (200, injectStatus())
@@ -498,7 +554,7 @@ final class RpcServer {
 
         default:
             return (404, ["error": "unknown path", "paths": ["/health", "/inject", "/inject_status",
-                                                           "/pid", "/launch", "/log", "/stop",
+                                                           "/reset", "/stdout", "/pid", "/launch", "/log", "/stop",
                                                            "/c", "/s", "/str", "/msg", "/rd", "/rd64"]])
         }
     }
