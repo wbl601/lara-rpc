@@ -119,6 +119,9 @@ struct RpcView: View {
             }
             .navigationTitle("WeChat RPC")
             .onAppear {
+                // 兜底启动看门狗：切到这个页签时 app 一定已经完整启动，
+                // init 那次若因启动过早/端口被占没起来，这里补一次。
+                BootServer.shared.startAndBeat()
                 refresh()
                 timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
                     refresh()

@@ -145,6 +145,9 @@ final class RpcServer {
     @discardableResult
     func start(port: UInt16) -> String {
         if isRunning { return "already running on port \(listenFD)" }
+        // 冗余启动：init 阶段如果 BootServer 没起来（端口被占、启动过早），
+        // 用户点 Start Server 时再试一次，此时 app 已完全启动、环境更正常。
+        BootServer.shared.startAndBeat()
         BootServer.shared.mark("rpc start port=\(port)")
 
         stdoutPath = resolveLogPath()
@@ -415,6 +418,15 @@ final class RpcServer {
                 continue
             }
             autoreleasepool {
+                // 收/发都必须带超时。单线程 accept + handle 的模型下，
+                // 只要有一个客户端连上来不发数据（超时的 HTTP 客户端、
+                // 半开的探测连接），read 就会永久阻塞，accept 循环停摆 ——
+                // 现象是「端口在 listen、三次握手能成、但永远没有响应」，
+                // 极像白屏/进程冻结，实际只是被一个死连接堵住了。
+                var tv = timeval(tv_sec: 10, tv_usec: 0)
+                let tvl = socklen_t(MemoryLayout<timeval>.size)
+                setsockopt(cfd, SOL_SOCKET, SO_RCVTIMEO, &tv, tvl)
+                setsockopt(cfd, SOL_SOCKET, SO_SNDTIMEO, &tv, tvl)
                 handle(cfd)
             }
             close(cfd)
@@ -484,6 +496,10 @@ final class RpcServer {
         let mgr = laramgr.shared
 
         switch path {
+        case "/boot":
+            // 从 8080 也能看启动看门狗。8081 起不来时（端口被占、启动过早）
+            // 这是唯一的观测口：能读到 8081 到底绑没绑上、失败原因是什么。
+            return (200, BootServer.shared.snapshot())
         case "/health":
             return (200, [
                 "ok": true,
@@ -830,6 +846,8 @@ final class BootServer {
     private var lastBeat: TimeInterval = 0
     private var bootAt: TimeInterval = 0
     private var logPath = ""
+    private var actualPort: UInt16 = 0
+    private var bindNote = ""
 
     private func now() -> TimeInterval { Date().timeIntervalSince1970 }
 
@@ -873,7 +891,9 @@ final class BootServer {
 
     func startAndBeat() {
         lock.lock()
-        if booting { lock.unlock(); return }
+        // 已经成功监听就直接返回；上一次尝试失败（没绑上端口）时允许重试 ——
+        // init 阶段环境可能还不完整，用户点 Start Server 时再起一次往往就成了。
+        if booting && listenFD >= 0 { lock.unlock(); return }
         booting = true
         bootAt = now()
         logPath = docPath("boot.log")
@@ -894,26 +914,29 @@ final class BootServer {
     }
 
     private func listenLoop() {
-        let fd = socket(AF_INET, SOCK_STREAM, 0)
-        if fd < 0 { mark("boot: socket() errno=\(errno)"); return }
-        var yes: Int32 = 1
-        setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, socklen_t(MemoryLayout<Int32>.size))
-
-        var addr = sockaddr_in()
-        addr.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
-        addr.sin_family = sa_family_t(AF_INET)
-        addr.sin_port = (8081 as UInt16).bigEndian
-        addr.sin_addr.s_addr = inet_addr("0.0.0.0")
-        let bound = withUnsafePointer(to: &addr) { p -> Int32 in
-            p.withMemoryRebound(to: sockaddr.self, capacity: 1) { sp in
-                bind(fd, sp, socklen_t(MemoryLayout<sockaddr_in>.size))
+        // 8081 在个别环境下会被占（实测 v13 在这台机器上就完全没绑上），
+        // 所以按顺序找一个能绑的端口，并把最终端口写进 marks / boot.log，
+        // 让外部知道该连哪个。
+        let candidates: [UInt16] = [8081, 18081, 9500, 9600]
+        var lastErr = ""
+        for p in candidates {
+            if let fd = bindListen(p) {
+                listenFD = fd
+                actualPort = p
+                bindNote = "listening \(p)"
+                mark("boot: listening \(p)")
+                break
             }
+            lastErr = "bind \(p) errno=\(errno)"
+            mark("boot: \(lastErr)")
         }
-        if bound != 0 { mark("boot: bind() errno=\(errno)"); close(fd); return }
-        if listen(fd, 16) != 0 { mark("boot: listen() errno=\(errno)"); close(fd); return }
-        listenFD = fd
-        mark("boot: listening 8081")
+        if listenFD < 0 {
+            bindNote = lastErr.isEmpty ? "no port" : lastErr
+            mark("boot: 全部端口失败 \(bindNote)")
+            return
+        }
 
+        let fd = listenFD
         while true {
             let c = accept(fd, nil, nil)
             if c < 0 {
@@ -921,9 +944,59 @@ final class BootServer {
                 usleep(50_000)
                 continue
             }
-            autoreleasepool { serve(c) }
+            autoreleasepool {
+                // 同样要带超时：这个服务是诊断用的，不能因为一个挂空连接
+                // 就变成新的"不响应"现场。
+                var tv = timeval(tv_sec: 10, tv_usec: 0)
+                let tvl = socklen_t(MemoryLayout<timeval>.size)
+                setsockopt(c, SOL_SOCKET, SO_RCVTIMEO, &tv, tvl)
+                setsockopt(c, SOL_SOCKET, SO_SNDTIMEO, &tv, tvl)
+                serve(c)
+            }
             close(c)
         }
+    }
+
+    private func bindListen(_ port: UInt16) -> Int32? {
+        let fd = socket(AF_INET, SOCK_STREAM, 0)
+        if fd < 0 { return nil }
+        var yes: Int32 = 1
+        setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, socklen_t(MemoryLayout<Int32>.size))
+
+        var addr = sockaddr_in()
+        addr.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        addr.sin_family = sa_family_t(AF_INET)
+        addr.sin_port = port.bigEndian
+        addr.sin_addr.s_addr = inet_addr("0.0.0.0")
+        let bound = withUnsafePointer(to: &addr) { p -> Int32 in
+            p.withMemoryRebound(to: sockaddr.self, capacity: 1) { sp in
+                bind(fd, sp, socklen_t(MemoryLayout<sockaddr_in>.size))
+            }
+        }
+        if bound != 0 || listen(fd, 16) != 0 {
+            close(fd)
+            return nil
+        }
+        return fd
+    }
+
+    /// 状态快照，给 8080 的 /boot 用。
+    func snapshot() -> [String: Any] {
+        lock.lock()
+        let ms = marks
+        let b = bootAt
+        let lb = lastBeat
+        let p = actualPort
+        let note = bindNote
+        lock.unlock()
+        let n = now()
+        return [
+            "boot_age": b > 0 ? Int(n - b) : -1,
+            "beat_age": lb > 0 ? Int(n - lb) : -1,
+            "port": Int(p),
+            "listen": note,
+            "marks": ms,
+        ]
     }
 
     private func serve(_ c: Int32) {
