@@ -519,10 +519,11 @@ final class RpcServer {
         // 「到底卡在哪」都问不出来。连接线程已经是每连接一个，这里只管互斥。
         let cheap: Set<String> = ["/boot", "/health", "/log", "/stdout", "/diag",
                                   "/applog", "/inject_status", "/pid"]
-        if !cheap.contains(path) {
-            opLock.lock()
-            defer { opLock.unlock() }
-        }
+        // 注意 defer 必须挂在函数作用域上。写在 if 块里会在块结束时立刻执行，
+        // 锁刚加上就放掉，等于没加。
+        let needsOpLock = !cheap.contains(path)
+        if needsOpLock { opLock.lock() }
+        defer { if needsOpLock { opLock.unlock() } }
 
         switch path {
         case "/boot":
