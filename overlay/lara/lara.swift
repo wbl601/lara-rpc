@@ -27,7 +27,7 @@ func laraBootMark(_ s: String) {
     let path = String(cString: h) + "/Documents/boot.log"
     let fd = path.withCString { Darwin.open($0, O_WRONLY | O_CREAT | O_APPEND, 0o644) }
     if fd < 0 { return }
-    let line = "[\(Int(time(nil)))] \(s)\n"
+    var line = "[\(Int(time(nil)))] \(s)\n"
     line.withUTF8 { buf in
         if let base = buf.baseAddress { _ = Darwin.write(fd, base, buf.count) }
     }
