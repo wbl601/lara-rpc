@@ -19,6 +19,13 @@ import Foundation
 import Darwin
 import UIKit
 
+/// 编译期构建标识。
+///
+/// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
+/// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
+/// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
+let LARA_RPC_BUILD = "v15-2026-11-19T1930"
+
 final class RpcServer {
     static let shared = RpcServer()
 
@@ -126,17 +133,23 @@ final class RpcServer {
 
     // MARK: - 日志
 
+    /// 日志用**独立的锁**。
+    /// 之前和主 lock 共用：任何在持 lock 期间调用 log() 的路径（route 的某个
+    /// case、注入线程、UI 的 refresh）都会自己把自己锁死 —— NSLock 不可重入，
+    /// 表现就是主线程卡住、界面动不了。日志和状态本来也没有互斥关系。
+    private let logLock = NSLock()
+
     func log(_ s: String) {
-        lock.lock()
+        logLock.lock()
         logs.append(s)
         if logs.count > 400 { logs.removeFirst(logs.count - 400) }
-        lock.unlock()
+        logLock.unlock()
         globallogger.log("(rpc) \(s)")
     }
 
     private func snapshotLogs() -> [String] {
-        lock.lock()
-        defer { lock.unlock() }
+        logLock.lock()
+        defer { logLock.unlock() }
         return logs
     }
 
@@ -504,6 +517,7 @@ final class RpcServer {
             return (200, [
                 "ok": true,
                 "service": "lara-rpc",
+                "build": LARA_RPC_BUILD,
                 "port": Int(currentPort),
                 "ds_ready": mgr.dsready,
                 "vfs_ready": mgr.vfsready,
@@ -849,34 +863,46 @@ final class BootServer {
     private var actualPort: UInt16 = 0
     private var bindNote = ""
 
-    private func now() -> TimeInterval { Date().timeIntervalSince1970 }
+    // 下面这一整块刻意只用 POSIX，不碰 FileManager / DateFormatter / Bundle。
+    //
+    // v13 的实测教训：`App.init()` 里调 `FileManager.default.urls(for:.documentDirectory)`
+    // 会把主线程整个卡死 —— 症状是白屏、boot.log 一次都没被创建、App.init 之后
+    // 再没执行过一行代码（lara.log 停在上一次运行的 17:16 不动）。
+    // getenv("HOME") 是 dyld 在进程启动时设好的，没有任何沙箱依赖，安全。
+    private var bootT0: time_t = 0
 
-    private func clock() -> String {
-        let f = DateFormatter()
-        f.dateFormat = "HH:mm:ss.SSS"
-        return f.string(from: Date())
+    private func now() -> TimeInterval { Double(time(nil)) }
+
+    private func ticks() -> String {
+        if bootT0 == 0 { bootT0 = time(nil) }
+        return "+\(Int(time(nil) - bootT0))s"
     }
 
     private func docPath(_ n: String) -> String {
-        let d = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        return (d ?? URL(fileURLWithPath: NSTemporaryDirectory())).appendingPathComponent(n).path
+        guard let h = getenv("HOME") else { return n }
+        return String(cString: h) + "/Documents/" + n
     }
 
     /// 打点。同时落盘：进程万一被冻结甚至被杀，HTTP 就什么都读不到了，
     /// 只有 boot.log 能在下一次启动时告诉我上次停在哪一步。
     func mark(_ s: String) {
-        let line = "[\(clock())] \(s)"
+        let line = "[\(ticks())] \(s)"
         lock.lock()
         marks.append(line)
         if marks.count > 300 { marks.removeFirst(marks.count - 300) }
         let p = logPath
         lock.unlock()
         guard !p.isEmpty else { return }
-        if let h = FileHandle(forWritingAtPath: p) {
-            h.seekToEndOfFile()
-            h.write(Data((line + "\n").utf8))
-            try? h.close()
+        // 用 open/write 而不是 FileHandle：后者走 Foundation，正是要避开的东西。
+        let fd = p.withCString { Darwin.open($0, O_WRONLY | O_CREAT | O_APPEND, 0o644) }
+        guard fd >= 0 else { return }
+        var out = line + "\n"
+        out.withUTF8 { buf in
+            if let base = buf.baseAddress {
+                _ = Darwin.write(fd, base, buf.count)
+            }
         }
+        Darwin.close(fd)
     }
 
     /// 主线程心跳：只在主线程执行。主线程一卡心跳就停，`beat_age` 会一直涨。
@@ -899,11 +925,8 @@ final class BootServer {
         logPath = docPath("boot.log")
         lock.unlock()
 
-        FileManager.default.createFile(atPath: logPath, contents: nil)
         mark("--- app launch ---")
-        let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
-        let b = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
-        mark("build \(v).\(b)")
+        mark("build \(LARA_RPC_BUILD)")
 
         let t = Thread { [weak self] in self?.listenLoop() }
         t.name = "lara-boot"

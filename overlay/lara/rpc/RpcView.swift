@@ -26,6 +26,13 @@ struct RpcView: View {
     var body: some View {
         NavigationStack {
             List {
+                // 装机后肉眼确认跑的是不是刚编的包。Info.plist 的版本号是上游的
+                // （0.2 / Release），装十个包都一样，之前完全靠猜。
+                Section {
+                    Text(LARA_RPC_BUILD)
+                        .font(.system(.footnote, design: .monospaced))
+                        .foregroundColor(.secondary)
+                }
                 Section {
                     LabeledContent("kernel r/w") {
                         Text(mgr.dsready ? "ready" : "not ready")
@@ -123,7 +130,7 @@ struct RpcView: View {
                 // init 那次若因启动过早/端口被占没起来，这里补一次。
                 BootServer.shared.startAndBeat()
                 refresh()
-                timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
+                timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
                     refresh()
                 }
             }
@@ -135,7 +142,10 @@ struct RpcView: View {
     }
 
     private func refresh() {
-        logtext = (server.tailLog(40)).joined(separator: "\n")
+        // 只取 20 行、3 秒一次：这个函数跑在主线程上，
+        // 读日志 + 触发 List 重绘都是实打实的开销，
+        // 目标进程卡住时更不该让它拖慢 UI。
+        logtext = (server.tailLog(20)).joined(separator: "\n")
 
         let st = server.injectStatus()
         let state = (st["state"] as? String) ?? "idle"
