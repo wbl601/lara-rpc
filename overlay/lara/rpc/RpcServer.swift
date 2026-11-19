@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v18-2026-11-20T0025"
+let LARA_RPC_BUILD = "v19-2026-11-20T0140"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -35,6 +35,10 @@ final class RpcServer {
     private var targetName: String = ""
     private var currentPort: UInt16 = 8080
     private let lock = NSLock()
+    // 所有会碰 RemoteCall 的接口走这把锁。RemoteCall 的会话是单份的：
+    // 两个线程同时驱动同一个 trojan 线程必然互相踩。用递归锁是因为
+    // route 里可能间接再进一次（例如 /relaunch 内部调 launch）。
+    private let opLock = NSRecursiveLock()
     private var logs: [String] = []
 
     // 注入状态机。为什么必须有这个：
@@ -430,19 +434,21 @@ final class RpcServer {
                 usleep(50_000)
                 continue
             }
-            autoreleasepool {
-                // 收/发都必须带超时。单线程 accept + handle 的模型下，
-                // 只要有一个客户端连上来不发数据（超时的 HTTP 客户端、
-                // 半开的探测连接），read 就会永久阻塞，accept 循环停摆 ——
-                // 现象是「端口在 listen、三次握手能成、但永远没有响应」，
-                // 极像白屏/进程冻结，实际只是被一个死连接堵住了。
-                var tv = timeval(tv_sec: 10, tv_usec: 0)
-                let tvl = socklen_t(MemoryLayout<timeval>.size)
-                setsockopt(cfd, SOL_SOCKET, SO_RCVTIMEO, &tv, tvl)
-                setsockopt(cfd, SOL_SOCKET, SO_SNDTIMEO, &tv, tvl)
-                handle(cfd)
-            }
-            close(cfd)
+            // 每条连接一个线程。单线程 accept+handle 的模型有两个致命后果：
+            // 1) 一个只连不发的客户端（探测、超时的 HTTP 客户端）就能让 accept 停摆；
+            // 2) 更常见的是远程调用卡死（目标进程死了、注入到一半），整个 HTTP 服务
+            //    跟着一起哑，连 /health 都返回不了，只能重启 app 才能恢复。
+            // 真正需要串行的只有远程调用本身，那个用 opLock 单独把关。
+            Thread { [weak self] in
+                autoreleasepool {
+                    var tv = timeval(tv_sec: 10, tv_usec: 0)
+                    let tvl = socklen_t(MemoryLayout<timeval>.size)
+                    setsockopt(cfd, SOL_SOCKET, SO_RCVTIMEO, &tv, tvl)
+                    setsockopt(cfd, SOL_SOCKET, SO_SNDTIMEO, &tv, tvl)
+                    self?.handle(cfd)
+                    close(cfd)
+                }
+            }.start()
         }
     }
 
@@ -508,6 +514,16 @@ final class RpcServer {
     private func route(method: String, path: String, params: [String: String]) -> (Int, [String: Any]) {
         let mgr = laramgr.shared
 
+        // 廉价只读接口不参与串行：远程调用一旦卡死（目标进程没了、注入到一半），
+        // 它会把 opLock 占住几十秒，而这些接口必须随时能答 —— 否则连
+        // 「到底卡在哪」都问不出来。连接线程已经是每连接一个，这里只管互斥。
+        let cheap: Set<String> = ["/boot", "/health", "/log", "/stdout", "/diag",
+                                  "/applog", "/inject_status", "/pid"]
+        if !cheap.contains(path) {
+            opLock.lock()
+            defer { opLock.unlock() }
+        }
+
         switch path {
         case "/boot":
             // 从 8080 也能看启动看门狗。8081 起不来时（端口被占、启动过早）
@@ -532,7 +548,12 @@ final class RpcServer {
         case "/inject":
             let proc = params["proc"] ?? "WeChat"
             let mig = (params["mig"] ?? "0") == "1"
-            let sign = Int(params["sign"] ?? "1") ?? 1
+            // 默认 0（上游 remotepac 签名路径）。实测 iOS 18.5 / A14：
+            // 裸指针那几条岔路（1/2/3）会把线程状态里的 diversifier 标志一起清掉，
+            // 内核改用错误的密钥重签，pc 变成非规范地址，线程连第一条指令都取不到
+            // （faulted at getpid: code=[0x1 0x20000001f06e0f9c]）。
+            // 0 路径按目标线程自己的 diversifier 签名，SpringBoard 上实测 memset 成功。
+            let sign = Int(params["sign"] ?? "0") ?? 0
             let r = beginInject(proc, mig: mig, sign: sign)
             return (200, ["result": r, "inject": injectStatus()])
 
