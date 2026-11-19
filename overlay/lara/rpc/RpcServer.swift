@@ -616,7 +616,7 @@ final class RpcServer {
 
         // ---- 以下都是远程原语，必须先注入成功 ----
 
-        case "/c", "/s", "/str", "/msg", "/rd", "/rd64":
+        case "/c", "/s", "/str", "/msg", "/msg_main", "/rd", "/rd64":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
                               "inject": injectStatus()])
@@ -676,6 +676,19 @@ final class RpcServer {
                     "errno": Int(remote_errno(r)),
                 ])
 
+            // 主线程版本：UIKit 的 windows / applicationState / 视图树这些东西在
+            // trojan 线程上调用会让微信进程直接消失，必须派回主线程。
+            case "/msg_main":
+                let obj = hex(params["o"])
+                let sel = hex(params["s"])
+                if sel == 0 { return (400, ["error": "missing s (selector address)"]) }
+                let a0 = argValue(params["a0"], r)
+                let a1 = argValue(params["a1"], r)
+                let a2 = argValue(params["a2"], r)
+                let a3 = argValue(params["a3"], r)
+                let ret = remote_msg_main(r, obj, sel, a0, a1, a2, a3)
+                return (200, ["ret": hexString(ret)])
+
             case "/rd":
                 let p = hex(params["p"])
                 guard p != 0 else { return (400, ["error": "missing p"]) }
@@ -695,7 +708,7 @@ final class RpcServer {
             return (404, ["error": "unknown path", "paths": ["/health", "/inject", "/inject_status",
                                                            "/reset", "/stdout", "/applog", "/diag", "/timeout",
                                                            "/pid", "/launch", "/log", "/stop",
-                                                           "/c", "/s", "/str", "/msg", "/rd", "/rd64"]])
+                                                           "/c", "/s", "/str", "/msg", "/msg_main", "/rd", "/rd64"]])
         }
     }
 
