@@ -42,26 +42,26 @@ final class RpcServer {
 
     private(set) var isRunning = false
 
-    /// stdout 被重定向到容器里的这个文件，/stdout 接口读它。
+    /// stdout 被重定向到一个文件，/stdout 接口读它。
     private var stdoutPath: String?
 
-    /// 把 C 层的 stdout/stderr 重定向到容器内的文件。
-    /// 为什么必须做：lara 的 RemoteCall 全程用 printf 打关键调试信息 ——
-    /// signState 的 pc_raw/pc_signed、异常类型 exc 和 code、每次远程调用的 pcAddr。
-    /// 这些信息在「非 Xcode 启动」时直接被系统丢掉，注入失败时等于闭着眼睛调。
-    private func redirectStdout() {
-        guard stdoutPath == nil else { return }
-        guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        let p = dir.appendingPathComponent("rc-stdout.log").path
-        stdoutPath = p
-        freopen(p, "a", stdout)
-        freopen(p, "a", stderr)
-        setvbuf(stdout, nil, _IOLBF, 0)
-        setvbuf(stderr, nil, _IOLBF, 0)
+    /// 定位 lara 自己那份日志。
+    ///
+    /// 为什么不是自己 freopen：lara 的 Logger.capture() 在启动时就用
+    /// `dup2(pipe, STDOUT_FILENO)` 把 stdout/stderr 全接管了，RemoteCall 里那些
+    /// printf（signState 的 pc_raw/pc_signed、异常的 exc/code、每次远程调用的 pcAddr）
+    /// 都流进它的 pipe，再由 appendtofile 落到 Documents/lara.log。
+    /// 我一开始在 start() 里 freopen，结果是建了一个空文件 —— printf 早就不走那条路了。
+    /// 直接读 lara 的成品日志最省事，也不用抢它的 fd。
+    private func resolveLogPath() -> String? {
+        guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
+        let p = dir.appendingPathComponent("lara.log").path
+        return FileManager.default.fileExists(atPath: p) ? p : nil
     }
 
     private func readStdoutTail(_ n: Int) -> [String] {
-        guard let p = stdoutPath, let h = FileHandle(forReadingAtPath: p) else { return [] }
+        guard let p = stdoutPath ?? resolveLogPath(),
+              let h = FileHandle(forReadingAtPath: p) else { return [] }
         defer { try? h.close() }
         let size = (try? h.seekToEnd()) ?? 0
         let start = size > 131072 ? size - 131072 : 0
@@ -111,7 +111,7 @@ final class RpcServer {
     func start(port: UInt16) -> String {
         if isRunning { return "already running on port \(listenFD)" }
 
-        redirectStdout()
+        stdoutPath = resolveLogPath()
 
         let fd = socket(AF_INET, SOCK_STREAM, 0)
         if fd < 0 { return "socket() failed errno=\(errno)" }
