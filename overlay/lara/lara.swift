@@ -188,6 +188,32 @@ struct lara: App {
                             // thanks
                             mgr.hasOffsets = emergencyfixfunctiontobereplacedlateronquestionmark()
                             BootServer.shared.mark("hasOffsets=\(mgr.hasOffsets)")
+
+                            // v18: 自动把 darksword exploit 跑起来，然后自己接管 RPC 监听。
+                            //
+                            // 为什么必须自动：上游把 ds_run() 只挂在 UI 按钮上，而 RPC 页的
+                            // Start Server 又用 .disabled(!mgr.dsready) 卡着 —— 不点 exploit
+                            // 就没有内核读写，没有 RPC 就没法远程去点那个按钮，直接死锁。
+                            // 这台设备是要当常驻节点的，没人会守着屏幕点，所以只能自己爬。
+                            //
+                            // RPC 的启动放在 ok 判断之外：exploit 失败时 dsready 为 false，
+                            // 注入类接口不能用，但 /health /boot 这类仍在进程内的接口照样
+                            // 有价值（能远程看到它活着、卡在哪一步）。宁可用一半，也别全哑。
+                            if mgr.hasOffsets && !mgr.dsattempted {
+                                BootServer.shared.mark("auto exploit begin")
+                                laraBootMark("13 auto exploit begin")
+                                // 让 UI 先出首帧再动内核，避免和启动期的东西抢主线程。
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    mgr.run { ok in
+                                        laraBootMark("14 exploit done ok=\(ok) dsready=\(mgr.dsready)")
+                                        BootServer.shared.mark("auto exploit done ok=\(ok) dsready=\(mgr.dsready)")
+                                        guard !RpcServer.shared.isRunning else { return }
+                                        let s = RpcServer.shared.start(port: 8080)
+                                        laraBootMark("15 rpc start: \(s)")
+                                        BootServer.shared.mark("auto rpc: \(s)")
+                                    }
+                                }
+                            }
                         }
                     }
                 } else {
