@@ -45,6 +45,9 @@ final class RpcServer {
     /// stdout 被重定向到一个文件，/stdout 接口读它。
     private var stdoutPath: String?
 
+    /// RemoteCall.m 里 printf 直写的那份诊断日志（自己 fopen，不经过 lara Logger）。
+    private var diagPath: String?
+
     /// 定位 lara 自己那份日志。
     ///
     /// 为什么不是自己 freopen：lara 的 Logger.capture() 在启动时就用
@@ -53,10 +56,27 @@ final class RpcServer {
     /// 都流进它的 pipe，再由 appendtofile 落到 Documents/lara.log。
     /// 我一开始在 start() 里 freopen，结果是建了一个空文件 —— printf 早就不走那条路了。
     /// 直接读 lara 的成品日志最省事，也不用抢它的 fd。
+    private func documentsPath(_ name: String) -> String {
+        let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        return (dir ?? URL(fileURLWithPath: NSTemporaryDirectory()))
+            .appendingPathComponent(name).path
+    }
+
     private func resolveLogPath() -> String? {
         guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
         let p = dir.appendingPathComponent("lara.log").path
         return FileManager.default.fileExists(atPath: p) ? p : nil
+    }
+
+    private func readFileTail(_ path: String?, _ n: Int) -> [String] {
+        guard let p = path, let h = FileHandle(forReadingAtPath: p) else { return [] }
+        defer { try? h.close() }
+        let size = (try? h.seekToEnd()) ?? 0
+        let start = size > 524288 ? size - 524288 : 0
+        try? h.seek(toOffset: start)
+        guard let d = try? h.readToEnd(), let s = String(data: d, encoding: .utf8) else { return [] }
+        let lines = s.components(separatedBy: "\n").filter { !$0.isEmpty }
+        return lines.count > n ? Array(lines.suffix(n)) : lines
     }
 
     private func readStdoutTail(_ n: Int) -> [String] {
@@ -69,6 +89,21 @@ final class RpcServer {
         guard let d = try? h.readToEnd(), let s = String(data: d, encoding: .utf8) else { return [] }
         let lines = s.components(separatedBy: "\n").filter { !$0.isEmpty }
         return lines.count > n ? Array(lines.suffix(n)) : lines
+    }
+
+    /// 会话作废：进程没了 / 远程线程坏了，都必须从这里走一遍，
+    /// 否则注入状态还写着 ready，外部会以为还能用。
+    private func invalidateRC(_ reason: String) {
+        lock.lock()
+        rc = nil
+        targetName = ""
+        if injectState != "injecting" {
+            injectState = "failed"
+            injectMessage = reason
+        }
+        lock.unlock()
+        log(reason + "，会话已作废")
+        rc_diag_line("[rpc] session invalidated: \(reason)\n")
     }
 
     /// rc 会被注入线程改写，路由线程也会读，统一从锁里取。
@@ -118,6 +153,16 @@ final class RpcServer {
         // 这里改成行缓冲/无缓冲，代价可忽略。
         setvbuf(stdout, nil, _IONBF, 0)
         setvbuf(stderr, nil, _IONBF, 0)
+
+        // 真正可靠的诊断落盘：RemoteCall.m 里所有 printf 已被重定向到 rc_diagf，
+        // 它自己 fopen 一个文件并每条 fflush。lara 的 Logger 会丢行（过滤 + 管道），
+        // 靠 /applog 排查注入问题已经踩过坑了。
+        let diag = documentsPath("rc-diag.log")
+        diagPath = diag
+        rc_set_diag_path(diag)
+        rc_diag_line("\n===== lara-rpc server start \(ISO8601DateFormatter().string(from: Date())) =====\n")
+        // 探测期把单次等待从 10s 压到 3s：会话一旦坏了立刻报错，不用干等 20s。
+        rc_set_wait_ms(5000)
 
         let fd = socket(AF_INET, SOCK_STREAM, 0)
         if fd < 0 { return "socket() failed errno=\(errno)" }
@@ -466,6 +511,24 @@ final class RpcServer {
             let n = Int(params["n"] ?? "150") ?? 150
             return (200, ["path": stdoutPath ?? "(未重定向)", "lines": readStdoutTail(n)])
 
+        // RemoteCall.m 里 printf 直写的那份日志（rc_diagf → rc-diag.log）。
+        // 和 /stdout、/applog 的区别：这条路径完全不经过 lara 的 Logger，
+        // 不会因为它的行过滤或落盘时机丢内容，崩之前写的一定在。
+        case "/diag":
+            if params["clear"] == "1" {
+                try? FileManager.default.removeItem(atPath: diagPath ?? "")
+                rc_set_diag_path(diagPath)
+                return (200, ["cleared": true, "path": diagPath ?? ""])
+            }
+            let n = Int(params["n"] ?? "200") ?? 200
+            return (200, ["path": diagPath ?? "(未设置)", "lines": readFileTail(diagPath, n)])
+
+        // 单次等待异常的毫秒数。探测时调小，会话坏了能秒级发现而不是干等 20s。
+        case "/timeout":
+            let ms = Int(params["ms"] ?? "0") ?? 0
+            rc_set_wait_ms(Int32(ms))
+            return (200, ["wait_ms": ms])
+
         // lara 自己的内存日志（globallogger.logs）。它才是 printf 的真正归宿：
         // Logger 启动时 dup2 抢走 stdout，但在「注入进行中」它并不及时落盘，
         // 所以文件里永远缺最关键的那几行。内存里是全的。
@@ -559,6 +622,18 @@ final class RpcServer {
                               "inject": injectStatus()])
             }
 
+            // 目标进程死了就立刻作废会话。
+            // 为什么必须判：远程调用把目标弄崩一次之后，_pid 还留着，所有原语都会
+            // 白等 rc_wait_ms*2 才返回 0，外部看起来像"调用次数用完了"。
+            // 真正发生的是"进程没了"，判活一句 kill() 就够。
+            if r.pid > 0 && kill(r.pid, 0) != 0 {
+                invalidateRC("目标进程 \(r.pid) 已退出")
+                return (410, ["error": "target process gone",
+                              "pid": Int(r.pid),
+                              "hint": "POST /inject?proc=WeChat&sign=1 重新注入",
+                              "inject": injectStatus()])
+            }
+
             switch path {
             case "/c":
                 guard let name = params["n"], !name.isEmpty else {
@@ -610,7 +685,8 @@ final class RpcServer {
 
         default:
             return (404, ["error": "unknown path", "paths": ["/health", "/inject", "/inject_status",
-                                                           "/reset", "/stdout", "/applog", "/pid", "/launch", "/log", "/stop",
+                                                           "/reset", "/stdout", "/applog", "/diag", "/timeout",
+                                                           "/pid", "/launch", "/log", "/stop",
                                                            "/c", "/s", "/str", "/msg", "/rd", "/rd64"]])
         }
     }
