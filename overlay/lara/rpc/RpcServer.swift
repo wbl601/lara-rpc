@@ -113,6 +113,12 @@ final class RpcServer {
 
         stdoutPath = resolveLogPath()
 
+        // printf 写管道默认是 4KB 全缓冲，RemoteCall 大段调试信息会滞留在缓冲区里，
+        // 于是「注入成功」之后的日志永远看不到 —— 排查注入稳定性时等于瞎的。
+        // 这里改成行缓冲/无缓冲，代价可忽略。
+        setvbuf(stdout, nil, _IONBF, 0)
+        setvbuf(stderr, nil, _IONBF, 0)
+
         let fd = socket(AF_INET, SOCK_STREAM, 0)
         if fd < 0 { return "socket() failed errno=\(errno)" }
 
@@ -259,7 +265,7 @@ final class RpcServer {
 
     /// 立刻返回，真正的注入在后台线程做。UI 不会因此卡住。
     @discardableResult
-    func beginInject(_ proc: String, mig: Bool = false, sign: Int = 0) -> String {
+    func beginInject(_ proc: String, mig: Bool = false, sign: Int = 1) -> String {
         lock.lock()
         if injectState == "injecting" {
             let s = "already injecting \(injectProc)"
@@ -449,7 +455,7 @@ final class RpcServer {
         case "/inject":
             let proc = params["proc"] ?? "WeChat"
             let mig = (params["mig"] ?? "0") == "1"
-            let sign = Int(params["sign"] ?? "0") ?? 0
+            let sign = Int(params["sign"] ?? "1") ?? 1
             let r = beginInject(proc, mig: mig, sign: sign)
             return (200, ["result": r, "inject": injectStatus()])
 
@@ -512,6 +518,28 @@ final class RpcServer {
             guard let b = params["b"], !b.isEmpty else { return (400, ["error": "missing b"]) }
             let ret = b.withCString { launch_app($0) }
             return (200, ["bundle": b, "ret": Int(ret)])
+
+        // RemoteCall 一旦把目标线程用到「卡死」，那个进程就是废的：后续每次远程调用
+        // 都只能等满超时。没有这个接口就只能去手机上手动上滑杀 App，而注入一旦
+        // 卡住，微信界面本身就是冻的，连上滑都可能不灵。
+        case "/kill":
+            let name = params["n"] ?? "WeChat"
+            let pid = name.withCString { find_process_pid($0) }
+            guard pid > 0 else { return (200, ["proc": name, "pid": 0, "killed": false]) }
+            let r = kill(pid, SIGKILL)
+            log("kill \(name) pid=\(pid) ret=\(r)")
+            return (200, ["proc": name, "pid": Int(pid), "killed": r == 0])
+
+        // 杀干净再拉起来，给它一个全新的进程和全新的线程池。
+        case "/relaunch":
+            guard let b = params["b"], !b.isEmpty else { return (400, ["error": "missing b"]) }
+            let name = params["n"] ?? "WeChat"
+            let pid = name.withCString { find_process_pid($0) }
+            if pid > 0 { _ = kill(pid, SIGKILL) }
+            Thread.sleep(forTimeInterval: 1.5)
+            let ret = b.withCString { launch_app($0) }
+            log("relaunch \(name): killed pid=\(pid) launch ret=\(ret)")
+            return (200, ["bundle": b, "killedPid": Int(pid), "ret": Int(ret)])
 
         case "/log":
             let n = Int(params["n"] ?? "80") ?? 80
