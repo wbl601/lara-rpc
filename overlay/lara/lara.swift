@@ -7,9 +7,31 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import Darwin
 
 enum taboptions {
     case applying, tweaks, rpc, files, logs
+}
+
+/// 启动进度打点：只依赖 POSIX，不碰 Foundation，也**不碰任何 class**。
+///
+/// 为什么不能直接用 BootServer.shared.mark()：v15 里 `init()` 第一行就是
+/// `BootServer.shared.startAndBeat()`，结果 boot.log 一次都没被创建、进程被
+/// 启动 watchdog 在 20.00s 处杀掉（0x8BADF00D process-launch）。这个现象有两种
+/// 解释 —— 要么 init 压根没执行，要么卡在 `static let shared` 的初始化里 ——
+/// 而类静态初始化本身就可能阻塞，用它当探针等于让嫌疑人给自己作证。
+/// 这个函数连类都不用，只要 getenv("HOME") 能读就落盘，所以它是可信的。
+@inline(never)
+func laraBootMark(_ s: String) {
+    guard let h = getenv("HOME") else { return }
+    let path = String(cString: h) + "/Documents/boot.log"
+    let fd = path.withCString { Darwin.open($0, O_WRONLY | O_CREAT | O_APPEND, 0o644) }
+    if fd < 0 { return }
+    let line = "[\(Int(time(nil)))] \(s)\n"
+    line.withUTF8 { buf in
+        if let base = buf.baseAddress { _ = Darwin.write(fd, base, buf.count) }
+    }
+    Darwin.close(fd)
 }
 
 let g_isunsupported: Bool = isunsupported()
@@ -27,25 +49,34 @@ struct lara: App {
     @State private var selectedtab: taboptions = .applying
     
     init() {
-        // 第一件事就先起看门狗，早于任何可能阻塞的初始化。
-        // 白屏时整个 RPC 服务都不响应，只有它能告诉我主线程到底卡在哪一步
-        // （独立线程应答 + 主线程心跳，见 RpcServer.swift 里的 BootServer）。
-        BootServer.shared.startAndBeat()
+        // 每句都落盘。首帧之前只有这几行会跑，白屏时就靠 boot.log 判断停在哪。
+        laraBootMark("01 init enter")
 
         #if DEBUG
         weonadebugbuild_pjbweouttahereexclamationmark = true
         #endif
-        
+        laraBootMark("02 debug flag")
+
         // fix file picker
         let fixMethod = class_getInstanceMethod(UIDocumentPickerViewController.self, #selector(UIDocumentPickerViewController.fix_init(forOpeningContentTypes:asCopy:)))!
         let origMethod = class_getInstanceMethod(UIDocumentPickerViewController.self, #selector(UIDocumentPickerViewController.init(forOpeningContentTypes:asCopy:)))!
         method_exchangeImplementations(origMethod, fixMethod)
-        
+        laraBootMark("03 filepicker hooked")
+
         if keepalive {
+            laraBootMark("04 toggleka begin")
             toggleka()
+            laraBootMark("05 toggleka end")
         }
-        
+
         globallogger.capture()
+        laraBootMark("06 capture done")
+
+        // 看门狗放到 init 最后：它要起线程 + 绑端口，万一这步有问题，
+        // 前面 01~06 已经把"init 本身是活的"这件事证明掉了。
+        laraBootMark("07 bootserver begin")
+        BootServer.shared.startAndBeat()
+        laraBootMark("08 init done")
     }
     
     var body: some Scene {
@@ -111,6 +142,7 @@ struct lara: App {
                 IconThemeFixupView()
             }
             .onAppear {
+                laraBootMark("10 view onAppear")
                 BootServer.shared.mark("view onAppear")
                 if !isunsupported() {
                     // 内核偏移解析原来直接在主线程同步跑。它要扫 kernelcache 的符号表，

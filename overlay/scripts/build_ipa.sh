@@ -38,6 +38,16 @@ cp -R "$APP_PATH" "$PWD/build/Payload/"
 
 plutil -replace UIFileSharingEnabled -bool YES "$PWD/build/Payload/lara.app/Info.plist"
 
+# 版本号写进产物。上游 Info.plist 一直是 0.2 / Release，装十个包读出来完全一样，
+# 之前根本没法确认手机上跑的是哪一次构建（也就排不掉"是不是包没装进去"）。
+# CFBundleVersion 只能用数字和点，所以用 UTC 时间戳。
+BUILD_VER=$(date -u +%Y%m%d%H%M)
+/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_VER" \
+  "$PWD/build/Payload/lara.app/Info.plist" 2>/dev/null \
+  || /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string $BUILD_VER" \
+  "$PWD/build/Payload/lara.app/Info.plist"
+echo "CFBundleVersion = $BUILD_VER"
+
 # 本地网络权限描述：iOS 14+ 起，接受局域网连接会触发隐私提示，
 # 没有这个键时连接会被静默拒绝，表现为"端口在监听但 PC 连不上"。
 if ! /usr/libexec/PlistBuddy -c "Print :NSLocalNetworkUsageDescription" \
