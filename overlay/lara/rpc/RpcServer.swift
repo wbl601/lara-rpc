@@ -625,13 +625,21 @@ final class RpcServer {
             // 目标进程死了就立刻作废会话。
             // 为什么必须判：远程调用把目标弄崩一次之后，_pid 还留着，所有原语都会
             // 白等 rc_wait_ms*2 才返回 0，外部看起来像"调用次数用完了"。
-            // 真正发生的是"进程没了"，判活一句 kill() 就够。
-            if r.pid > 0 && kill(r.pid, 0) != 0 {
-                invalidateRC("目标进程 \(r.pid) 已退出")
-                return (410, ["error": "target process gone",
-                              "pid": Int(r.pid),
-                              "hint": "POST /inject?proc=WeChat&sign=1 重新注入",
-                              "inject": injectStatus()])
+            //
+            // 坑：不能拿 kill() 的返回值直接判。iOS 沙箱里向别的 app 发信号会被拒，
+            // 返回 -1 但 errno=EPERM —— 进程明明活着。只有 ESRCH 才是"确实没有这个
+            // 进程"。第一版没区分，把正常会话全废了（实测见 rc-diag.log）。
+            if r.pid > 0 {
+                errno = 0
+                let kr = kill(r.pid, 0)
+                let ke = errno
+                if kr != 0 && ke == ESRCH {
+                    invalidateRC("目标进程 \(r.pid) 已退出")
+                    return (410, ["error": "target process gone",
+                                  "pid": Int(r.pid),
+                                  "hint": "POST /inject?proc=WeChat&sign=1 重新注入",
+                                  "inject": injectStatus()])
+                }
             }
 
             switch path {
