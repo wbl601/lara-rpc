@@ -23,6 +23,11 @@ enum taboptions {
 /// 这个函数连类都不用，只要 getenv("HOME") 能读就落盘，所以它是可信的。
 @inline(never)
 func laraBootMark(_ s: String) {
+    // 先走 syslog。文件写不出来的情况下（沙箱没就绪、HOME 不对、open 被拦），
+    // NSLog 仍然会进系统日志，而 syslog 是我们在 PC 上能 100% 抓到的通道 ——
+    // 前面几轮的所有结论都卡在"到底有没有执行到 init"这一点上，不能再只靠文件。
+    NSLog("[lara-boot] %@", s)
+
     guard let h = getenv("HOME") else { return }
     let path = String(cString: h) + "/Documents/boot.log"
     let fd = path.withCString { Darwin.open($0, O_WRONLY | O_CREAT | O_APPEND, 0o644) }
@@ -35,7 +40,15 @@ func laraBootMark(_ s: String) {
 }
 
 let g_isunsupported: Bool = isunsupported()
-var weonadebugbuild_pjbweouttahereexclamationmark: Bool = false
+
+// 顶层 var 的初始化器在 **dyld 阶段**（main 之前）执行，这是唯一能在
+// `App.init()` 之前落一笔的地方。有它才能把两种完全不同的死法分开：
+//   syslog 里有 00 → 我们的二进制已被加载执行，问题在 main/init 里
+//   连 00 都没有 → 卡在加载我们之前（Swift 运行时 / UIKit / 签名校验）
+var weonadebugbuild_pjbweouttahereexclamationmark: Bool = {
+    laraBootMark("00 dyld global init")
+    return false
+}()
 
 @main
 struct lara: App {
@@ -64,9 +77,13 @@ struct lara: App {
         laraBootMark("03 filepicker hooked")
 
         if keepalive {
-            laraBootMark("04 toggleka begin")
-            toggleka()
-            laraBootMark("05 toggleka end")
+            // keepalive 的 toggleka() 会激活 AVAudioSession（setCategory + setActive）。
+            // 这一步需要 app 已完成启动、能和 mediaserverd 通信，放在 init（main 之前）
+            // 会一直阻塞到 process-launch watchdog 的 20 秒上限，然后被 kill(9) ——
+            // 表现就是白屏、无任何日志、重启手机才恢复。
+            // 现在改成首帧之后再做（见 body 里的 onAppear），启动路径上一个内核/音频
+            // 操作都不留。
+            laraBootMark("04 toggleka deferred")
         }
 
         globallogger.capture()
@@ -144,6 +161,16 @@ struct lara: App {
             .onAppear {
                 laraBootMark("10 view onAppear")
                 BootServer.shared.mark("view onAppear")
+
+                // 保活音频推迟到首帧之后。启动阶段激活 AVAudioSession 会阻塞到
+                // 20 秒 watchdog（见 init 里的注释），这里已经出了首帧，安全。
+                if keepalive {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        laraBootMark("11 toggleka begin")
+                        toggleka()
+                        laraBootMark("12 toggleka end")
+                    }
+                }
                 if !isunsupported() {
                     // 内核偏移解析原来直接在主线程同步跑。它要扫 kernelcache 的符号表，
                     // 正常几百毫秒，异常时可能长时间不返回 —— 主线程一卡就是白屏：
