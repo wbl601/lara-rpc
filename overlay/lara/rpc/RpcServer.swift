@@ -259,7 +259,7 @@ final class RpcServer {
 
     /// 立刻返回，真正的注入在后台线程做。UI 不会因此卡住。
     @discardableResult
-    func beginInject(_ proc: String, mig: Bool = false) -> String {
+    func beginInject(_ proc: String, mig: Bool = false, sign: Int = 0) -> String {
         lock.lock()
         if injectState == "injecting" {
             let s = "already injecting \(injectProc)"
@@ -272,7 +272,12 @@ final class RpcServer {
         injectStarted = Date().timeIntervalSince1970
         lock.unlock()
 
-        log("开始注入 \(proc)（后台线程，migBypass=\(mig)）")
+        // 传递「怎么写线程状态里的 pc/lr」这一策略给 ObjC 侧的 signState。
+        // 走 UserDefaults 而不是加头文件属性：RemoteCall.h 是上游文件，
+        // 为了一个 int 去 overlay 整个头文件会让以后同步上游更麻烦。
+        UserDefaults.standard.set(sign, forKey: "rcSignMode")
+
+        log("开始注入 \(proc)（后台线程，migBypass=\(mig) signMode=\(sign)）")
 
         let t = Thread { [weak self] in self?.doInject(proc, mig: mig) }
         t.name = "lara-rpc-inject"
@@ -444,7 +449,8 @@ final class RpcServer {
         case "/inject":
             let proc = params["proc"] ?? "WeChat"
             let mig = (params["mig"] ?? "0") == "1"
-            let r = beginInject(proc, mig: mig)
+            let sign = Int(params["sign"] ?? "0") ?? 0
+            let r = beginInject(proc, mig: mig, sign: sign)
             return (200, ["result": r, "inject": injectStatus()])
 
         // C 层 printf 的尾巴。注入排查完全靠它：异常类型 exc、code、fault 时真实的 pc。
@@ -453,6 +459,28 @@ final class RpcServer {
         case "/stdout":
             let n = Int(params["n"] ?? "150") ?? 150
             return (200, ["path": stdoutPath ?? "(未重定向)", "lines": readStdoutTail(n)])
+
+        // lara 自己的内存日志（globallogger.logs）。它才是 printf 的真正归宿：
+        // Logger 启动时 dup2 抢走 stdout，但在「注入进行中」它并不及时落盘，
+        // 所以文件里永远缺最关键的那几行。内存里是全的。
+        case "/applog":
+            let n = Int(params["n"] ?? "200") ?? 200
+            var all: [String] = []
+            if Thread.isMainThread {
+                all = globallogger.logs
+            } else {
+                let sem = DispatchSemaphore(value: 0)
+                DispatchQueue.main.async {
+                    all = globallogger.logs
+                    sem.signal()
+                }
+                // 主线程万一被卡住也不能把 RPC 请求线程永久拖死，3 秒后放弃。
+                if sem.wait(timeout: .now() + 3) == .timedOut {
+                    return (200, ["count": -1, "lines": ["(applog) main thread busy"])
+                }
+            }
+            let tail = all.count > n ? Array(all.suffix(n)) : all
+            return (200, ["count": all.count, "lines": tail])
 
         // 清掉卡死的 injecting 状态。改成后台线程注入之后，进程被挂起时状态会
         // 永远停在 injecting，没有这个接口就只能重启 app（还得重跑 exploit）。
@@ -554,7 +582,7 @@ final class RpcServer {
 
         default:
             return (404, ["error": "unknown path", "paths": ["/health", "/inject", "/inject_status",
-                                                           "/reset", "/stdout", "/pid", "/launch", "/log", "/stop",
+                                                           "/reset", "/stdout", "/applog", "/pid", "/launch", "/log", "/stop",
                                                            "/c", "/s", "/str", "/msg", "/rd", "/rd64"]])
         }
     }
