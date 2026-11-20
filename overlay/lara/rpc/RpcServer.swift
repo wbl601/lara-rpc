@@ -814,7 +814,7 @@ final class RpcServer {
                 let limit = min(Int(params["limit"] ?? "80") ?? 80, 400)
                 var items: [[String: Any]] = []
                 var note = ""
-                let ok: Bool = r.doRemoteCallSyncOnMainThread {
+                let ok: Bool = r.doSync(onMainThread: {
                     let selDefault = "defaultCenter".withCString { remote_sel(r, $0) }
                     let selGetSvc = "getService:".withCString { remote_sel(r, $0) }
                     let clsCenter = "MMServiceCenter".withCString { remote_getClass(r, $0) }
@@ -905,7 +905,7 @@ final class RpcServer {
                         ])
                     }
                     return true
-                }
+                })
                 return (200, ["ok": ok, "count": items.count, "error": note, "items": items])
 
             // 发文本：一次征用主线程，把「取联系人 → 取 peeking 控制器 → 发送」全跑完。
@@ -916,7 +916,7 @@ final class RpcServer {
                     return (400, ["error": "missing wxid/text"])
                 }
                 var msg = ""
-                let ok: Bool = r.doRemoteCallSyncOnMainThread {
+                let ok: Bool = r.doSync(onMainThread: {
                     let selDefault = "defaultCenter".withCString { remote_sel(r, $0) }
                     let selGetSvc = "getService:".withCString { remote_sel(r, $0) }
                     let clsCenter = "MMServiceCenter".withCString { remote_getClass(r, $0) }
@@ -945,7 +945,7 @@ final class RpcServer {
                     if body == 0 { msg = "text nil"; return false }
                     _ = remote_msg(r, lc, selSend, body, 0, 0, 0)
                     return true
-                }
+                })
                 return (200, ["ok": ok, "error": msg])
 
 
