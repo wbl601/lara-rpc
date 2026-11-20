@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v21-2026-11-20T1425"
+let LARA_RPC_BUILD = "v22-2026-11-20T1450"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -676,7 +676,8 @@ final class RpcServer {
 
         // ---- 以下都是远程原语，必须先注入成功 ----
 
-        case "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64":
+        case "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64",
+             "/call", "/pool", "/wx/sessions", "/wx/send":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
                               "inject": injectStatus()])
