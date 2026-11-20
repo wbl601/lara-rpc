@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v22-2026-11-20T1450"
+let LARA_RPC_BUILD = "v23-2026-11-20T1520"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -677,7 +677,7 @@ final class RpcServer {
         // ---- 以下都是远程原语，必须先注入成功 ----
 
         case "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64",
-             "/call", "/pool", "/wx/sessions", "/wx/send":
+             "/call", "/pool", "/wx/probe", "/wx/sessions", "/wx/send":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
                               "inject": injectStatus()])
@@ -803,88 +803,159 @@ final class RpcServer {
 
             // ---- 微信业务批量路由 ----------------------------------------
             //
-            // 为什么必须做成批量：主线程征用一次约 0.4 秒（投递 EXC_GUARD、唤醒、
-            // 两次 trap），而列一个会话要读十几个字段。按字段逐个 HTTP 调用 =
-            // 每个会话 12~14 次征用 ≈ 5 秒，100 个会话要 8 分钟，工作台 3 秒的 tick
-            // 根本没法用。放进一次征用里循环，全程只要 0.4 秒 + 每个 msgSend 的
-            // 几十微秒。
+            // 两条铁律（都是微信被弄死换来的，改之前先读）：
             //
-            // 字段名全部照抄原厂 frida agent（_bridge.js 的 pollSessions / listSessions），
-            // 不是猜的。
+            // 1) **先问再调**。objc_msgSend 打到类/miss 上会走消息转发，抛
+            //    doesNotRecognizeSelector，微信没有兜这个异常 —— 进程当场 abort，
+            //    连 .ips 都常常来不及写。所以每个 selector 必须先用
+            //    respondsToSelector: / instancesRespondToSelector: 问过再调。
+            //    8.0.80 的 MMServiceCenter 到底有没有 +defaultCenter，只能问，不能假设。
+            //
+            // 2) **放在一次主线程征用里跑完**。征用一次约 0.4 秒（投 EXC_GUARD、唤醒、
+            //    两次 trap），而列一个会话要读十几个字段。按字段逐个 HTTP 调用 =
+            //    每个会话 12~14 次征用 ≈ 5 秒，100 个会话要 8 分钟，工作台 3 秒的 tick
+            //    根本吃不下。放进一次征用里循环，全程 0.4 秒 + 每次 msgSend 几十微秒。
+            //
+            // 字段名照抄原厂 frida agent（_bridge.js 的 pollSessions / listSessions）。
+
+            // 原料探测：只做 respondsToSelector / instancesRespondToSelector，不调业务方法。
+            // 用途是先建基线——哪些类在、哪些方法在——再决定业务路由能读哪些字段。
+            case "/wx/probe":
+                let clss = (params["cls"] ?? "").split(separator: ",").map(String.init).filter { !$0.isEmpty }
+                let sels = (params["sel"] ?? "").split(separator: ",").map(String.init).filter { !$0.isEmpty }
+                var rows: [[String: Any]] = []
+                let ok: Bool = r.doSync(onMainThread: {
+                    let sResp = "respondsToSelector:".withCString { remote_sel(r, $0) }
+                    let sInst = "instancesRespondToSelector:".withCString { remote_sel(r, $0) }
+                    for cn in clss {
+                        let c = cn.withCString { remote_getClass(r, $0) }
+                        if c == 0 {
+                            rows.append(["cls": cn, "exists": false])
+                            continue
+                        }
+                        var clsSels: [String] = []
+                        var instSels: [String] = []
+                        for sn in sels {
+                            let s = sn.withCString { remote_sel(r, $0) }
+                            if s == 0 { continue }
+                            if sResp != 0, remote_msg(r, c, sResp, s, 0, 0, 0) != 0 { clsSels.append(sn) }
+                            if sInst != 0, remote_msg(r, c, sInst, s, 0, 0, 0) != 0 { instSels.append(sn) }
+                        }
+                        rows.append(["cls": cn, "exists": true, "cls_sels": clsSels, "inst_sels": instSels])
+                    }
+                    return true
+                })
+                return (200, ["ok": ok, "rows": rows])
+
             case "/wx/sessions":
                 let limit = min(Int(params["limit"] ?? "80") ?? 80, 400)
                 var items: [[String: Any]] = []
                 var note = ""
+                var via = ""
                 let ok: Bool = r.doSync(onMainThread: {
-                    let selDefault = "defaultCenter".withCString { remote_sel(r, $0) }
-                    let selGetSvc = "getService:".withCString { remote_sel(r, $0) }
-                    let clsCenter = "MMServiceCenter".withCString { remote_getClass(r, $0) }
-                    let center = remote_msg(r, clsCenter, selDefault, 0, 0, 0, 0)
-                    if center == 0 { note = "MMServiceCenter.defaultCenter 返回 nil"; return false }
+                    let sResp = "respondsToSelector:".withCString { remote_sel(r, $0) }
+                    func selOf(_ name: String) -> UInt64 { name.withCString { remote_sel(r, $0) } }
+                    func clsOf(_ name: String) -> UInt64 { name.withCString { remote_getClass(r, $0) } }
+                    func resp(_ obj: UInt64, _ sel: UInt64) -> Bool {
+                        guard obj != 0, sel != 0, sResp != 0 else { return false }
+                        return remote_msg(r, obj, sResp, sel, 0, 0, 0) != 0
+                    }
 
-                    let clsCC = "CContactMgr".withCString { remote_getClass(r, $0) }
-                    let cc = remote_msg(r, center, selGetSvc, clsCC, 0, 0, 0)
-                    let clsSM = "MMNewSessionMgr".withCString { remote_getClass(r, $0) }
-                    let sm = remote_msg(r, center, selGetSvc, clsSM, 0, 0, 0)
+                    let clsCenter = clsOf("MMServiceCenter")
+                    if clsCenter == 0 { note = "MMServiceCenter 类不存在"; return false }
+
+                    // 中枢：新版微信是类方法 +defaultCenter，老版一个类方法都没有。
+                    var center: UInt64 = 0
+                    for cand in ["defaultCenter", "sharedInstance", "sharedCenter", "serviceCenter", "defaultServiceCenter"] {
+                        let s = selOf(cand)
+                        if resp(clsCenter, s) {
+                            let v = remote_msg(r, clsCenter, s, 0, 0, 0, 0)
+                            if v != 0 { center = v; via = cand; break }
+                        }
+                    }
+                    if center == 0 {
+                        note = "取不到 MMServiceCenter 中枢：defaultCenter/sharedInstance/sharedCenter/serviceCenter/defaultServiceCenter 全部不响应或返回 nil"
+                        return false
+                    }
+
+                    let sGetSvc = selOf("getService:")
+                    guard resp(center, sGetSvc) else { note = "中枢不响应 getService:"; return false }
+
+                    let clsCC = clsOf("CContactMgr")
+                    let cc = clsCC != 0 ? remote_msg(r, center, sGetSvc, clsCC, 0, 0, 0) : 0
+                    let clsSM = clsOf("MMNewSessionMgr")
+                    if clsSM == 0 { note = "MMNewSessionMgr 类不存在"; return false }
+                    let sm = remote_msg(r, center, sGetSvc, clsSM, 0, 0, 0)
                     if sm == 0 { note = "getService:MMNewSessionMgr 返回 nil"; return false }
 
-                    let selCount = "GetSessionCount".withCString { remote_sel(r, $0) }
-                    let selAt = "GetSessionAtIndex:".withCString { remote_sel(r, $0) }
-                    let selUser = "m_nsUserName".withCString { remote_sel(r, $0) }
-                    let selNick = "m_nsNickName".withCString { remote_sel(r, $0) }
-                    let selRemark = "m_nsRemark".withCString { remote_sel(r, $0) }
-                    let selAlias = "m_nsAliasName".withCString { remote_sel(r, $0) }
-                    let selContact = "m_contact".withCString { remote_sel(r, $0) }
-                    let selWrap = "m_msgWrap".withCString { remote_sel(r, $0) }
-                    let selSvr = "m_n64MesSvrID".withCString { remote_sel(r, $0) }
-                    let selContent = "m_nsContent".withCString { remote_sel(r, $0) }
-                    let selFrom = "m_nsFromUsr".withCString { remote_sel(r, $0) }
-                    let selTo = "m_nsToUsr".withCString { remote_sel(r, $0) }
-                    let selReal = "m_nsRealChatUsr".withCString { remote_sel(r, $0) }
-                    let selMType = "m_uiMessageType".withCString { remote_sel(r, $0) }
-                    let selCTime = "m_uiCreateTime".withCString { remote_sel(r, $0) }
-                    let selUnread = "m_uiUnreadCount".withCString { remote_sel(r, $0) }
-                    let selByName = "getContactByName:".withCString { remote_sel(r, $0) }
+                    let sCount = selOf("GetSessionCount")
+                    let sAt = selOf("GetSessionAtIndex:")
+                    if !resp(sm, sCount) { note = "MMNewSessionMgr 没有 GetSessionCount"; return false }
+                    if !resp(sm, sAt) { note = "MMNewSessionMgr 没有 GetSessionAtIndex:"; return false }
 
-                    let total = remote_msg(r, sm, selCount, 0, 0, 0, 0)
+                    // 会话对象 / 消息对象上的字段。缺哪个就跳过哪个，绝不让 msgSend 打到空位上。
+                    let sUser = selOf("m_nsUserName")
+                    let sWrap = selOf("m_msgWrap")
+                    let sContact = selOf("m_contact")
+                    let sUnread = selOf("m_uiUnreadCount")
+                    let sNick = selOf("m_nsNickName")
+                    let sRemark = selOf("m_nsRemark")
+                    let sAlias = selOf("m_nsAliasName")
+                    let sByName = selOf("getContactByName:")
+                    let sSvr = selOf("m_n64MesSvrID")
+                    let sContent = selOf("m_nsContent")
+                    let sFrom = selOf("m_nsFromUsr")
+                    let sTo = selOf("m_nsToUsr")
+                    let sReal = selOf("m_nsRealChatUsr")
+                    let sMType = selOf("m_uiMessageType")
+                    let sCTime = selOf("m_uiCreateTime")
+                    let canByName = cc != 0 && resp(cc, sByName)
+
+                    let total = remote_msg(r, sm, sCount, 0, 0, 0, 0)
                     let n = Int(min(total, UInt64(limit)))
                     for i in 0..<n {
-                        let h = remote_msg(r, sm, selAt, UInt64(i), 0, 0, 0)
+                        let h = remote_msg(r, sm, sAt, UInt64(i), 0, 0, 0)
                         if h == 0 { continue }
-                        guard let user = self.readNSString(remote_msg(r, h, selUser, 0, 0, 0, 0), r),
+                        guard resp(h, sUser),
+                              let user = self.readNSString(remote_msg(r, h, sUser, 0, 0, 0, 0), r),
                               !user.isEmpty else { continue }
 
                         var nick = "", remark = "", alias = ""
-                        let cu = user.withCString { remote_NSString(r, $0) }
-                        let c = cu != 0 ? remote_msg(r, cc, selByName, cu, 0, 0, 0) : 0
-                        if c != 0 {
-                            nick = self.readNSString(remote_msg(r, c, selNick, 0, 0, 0, 0), r) ?? ""
-                            remark = self.readNSString(remote_msg(r, c, selRemark, 0, 0, 0, 0), r) ?? ""
-                            alias = self.readNSString(remote_msg(r, c, selAlias, 0, 0, 0, 0), r) ?? ""
+                        if canByName {
+                            let cu = user.withCString { remote_NSString(r, $0) }
+                            let c = cu != 0 ? remote_msg(r, cc, sByName, cu, 0, 0, 0) : 0
+                            if c != 0 {
+                                if resp(c, sNick) { nick = self.readNSString(remote_msg(r, c, sNick, 0, 0, 0, 0), r) ?? "" }
+                                if resp(c, sRemark) { remark = self.readNSString(remote_msg(r, c, sRemark, 0, 0, 0, 0), r) ?? "" }
+                                if resp(c, sAlias) { alias = self.readNSString(remote_msg(r, c, sAlias, 0, 0, 0, 0), r) ?? "" }
+                            }
                         }
-                        // 群 wxid 在三档联系人接口里都可能查不到，会话自己挂的 m_contact 是兜底
-                        if nick.isEmpty && remark.isEmpty {
-                            let mc = remote_msg(r, h, selContact, 0, 0, 0, 0)
+                        // 群 wxid（xxx@chatroom）常常三档联系人接口都查不到，
+                        // 会话自己挂着的 m_contact 是唯一兜底。
+                        if nick.isEmpty && remark.isEmpty && resp(h, sContact) {
+                            let mc = remote_msg(r, h, sContact, 0, 0, 0, 0)
                             if mc != 0 {
-                                nick = self.readNSString(remote_msg(r, mc, selNick, 0, 0, 0, 0), r) ?? ""
-                                remark = self.readNSString(remote_msg(r, mc, selRemark, 0, 0, 0, 0), r) ?? ""
+                                if resp(mc, sNick) { nick = self.readNSString(remote_msg(r, mc, sNick, 0, 0, 0, 0), r) ?? "" }
+                                if resp(mc, sRemark) { remark = self.readNSString(remote_msg(r, mc, sRemark, 0, 0, 0, 0), r) ?? "" }
                             }
                         }
 
                         var svr: Int64 = 0
                         var content = "", from = "", to = "", real = ""
                         var mtype: UInt64 = 0, ctime: UInt64 = 0
-                        let w = remote_msg(r, h, selWrap, 0, 0, 0, 0)
+                        let w = resp(h, sWrap) ? remote_msg(r, h, sWrap, 0, 0, 0, 0) : 0
                         if w != 0 {
-                            svr = Int64(bitPattern: remote_msg(r, w, selSvr, 0, 0, 0, 0))
-                            content = self.readNSString(remote_msg(r, w, selContent, 0, 0, 0, 0), r) ?? ""
-                            from = self.readNSString(remote_msg(r, w, selFrom, 0, 0, 0, 0), r) ?? ""
-                            to = self.readNSString(remote_msg(r, w, selTo, 0, 0, 0, 0), r) ?? ""
-                            real = self.readNSString(remote_msg(r, w, selReal, 0, 0, 0, 0), r) ?? ""
-                            mtype = remote_msg(r, w, selMType, 0, 0, 0, 0) & 0xffffffff
-                            ctime = remote_msg(r, w, selCTime, 0, 0, 0, 0) & 0xffffffff
+                            if resp(w, sSvr) { svr = Int64(bitPattern: remote_msg(r, w, sSvr, 0, 0, 0, 0)) }
+                            if resp(w, sContent) { content = self.readNSString(remote_msg(r, w, sContent, 0, 0, 0, 0), r) ?? "" }
+                            if resp(w, sFrom) { from = self.readNSString(remote_msg(r, w, sFrom, 0, 0, 0, 0), r) ?? "" }
+                            if resp(w, sTo) { to = self.readNSString(remote_msg(r, w, sTo, 0, 0, 0, 0), r) ?? "" }
+                            if resp(w, sReal) { real = self.readNSString(remote_msg(r, w, sReal, 0, 0, 0, 0), r) ?? "" }
+                            if resp(w, sMType) { mtype = remote_msg(r, w, sMType, 0, 0, 0, 0) & 0xffffffff }
+                            if resp(w, sCTime) { ctime = remote_msg(r, w, sCTime, 0, 0, 0, 0) & 0xffffffff }
                         }
-                        let unread = remote_msg(r, h, selUnread, 0, 0, 0, 0) & 0xffffffff
+                        var unread: UInt64 = 0
+                        if resp(h, sUnread) { unread = remote_msg(r, h, sUnread, 0, 0, 0, 0) & 0xffffffff }
+
                         let isGroup = user.contains("@chatroom")
                         let display = !remark.isEmpty ? remark : (!nick.isEmpty ? nick : user)
                         items.append([
@@ -907,10 +978,11 @@ final class RpcServer {
                     }
                     return true
                 })
-                return (200, ["ok": ok, "count": items.count, "error": note, "items": items])
+                return (200, ["ok": ok, "count": items.count, "error": note,
+                              "via": via, "total_hint": items.count, "items": items])
 
-            // 发文本：一次征用主线程，把「取联系人 → 取 peeking 控制器 → 发送」全跑完。
-            // 不能拆成多次 /call：每次都重新征用主线程，而且中间对象会被 pool 收走。
+            // 发文本：一次主线程征用，把「取联系人 → 取 peeking 控制器 → 发送」全跑完。
+            // 不能拆成多次 /call：每次都重新征用主线程，且中间对象会被 pool 收走。
             case "/wx/send":
                 guard let wxid = params["wxid"], !wxid.isEmpty,
                       let text = params["text"] else {
@@ -918,37 +990,57 @@ final class RpcServer {
                 }
                 var msg = ""
                 let ok: Bool = r.doSync(onMainThread: {
-                    let selDefault = "defaultCenter".withCString { remote_sel(r, $0) }
-                    let selGetSvc = "getService:".withCString { remote_sel(r, $0) }
-                    let clsCenter = "MMServiceCenter".withCString { remote_getClass(r, $0) }
-                    let center = remote_msg(r, clsCenter, selDefault, 0, 0, 0, 0)
-                    if center == 0 { msg = "defaultCenter nil"; return false }
+                    let sResp = "respondsToSelector:".withCString { remote_sel(r, $0) }
+                    func selOf(_ name: String) -> UInt64 { name.withCString { remote_sel(r, $0) } }
+                    func clsOf(_ name: String) -> UInt64 { name.withCString { remote_getClass(r, $0) } }
+                    func resp(_ obj: UInt64, _ sel: UInt64) -> Bool {
+                        guard obj != 0, sel != 0, sResp != 0 else { return false }
+                        return remote_msg(r, obj, sResp, sel, 0, 0, 0) != 0
+                    }
 
-                    let clsCC = "CContactMgr".withCString { remote_getClass(r, $0) }
-                    let cc = remote_msg(r, center, selGetSvc, clsCC, 0, 0, 0)
+                    let clsCenter = clsOf("MMServiceCenter")
+                    if clsCenter == 0 { msg = "MMServiceCenter 类不存在"; return false }
+                    var center: UInt64 = 0
+                    for cand in ["defaultCenter", "sharedInstance", "sharedCenter", "serviceCenter", "defaultServiceCenter"] {
+                        let s = selOf(cand)
+                        if resp(clsCenter, s) {
+                            let v = remote_msg(r, clsCenter, s, 0, 0, 0, 0)
+                            if v != 0 { center = v; break }
+                        }
+                    }
+                    if center == 0 { msg = "取不到中枢"; return false }
+
+                    let sGetSvc = selOf("getService:")
+                    guard resp(center, sGetSvc) else { msg = "中枢不响应 getService:"; return false }
+
+                    let clsCC = clsOf("CContactMgr")
+                    let cc = clsCC != 0 ? remote_msg(r, center, sGetSvc, clsCC, 0, 0, 0) : 0
                     if cc == 0 { msg = "CContactMgr nil"; return false }
 
-                    let selByName = "getContactByName:".withCString { remote_sel(r, $0) }
+                    let sByName = selOf("getContactByName:")
+                    guard resp(cc, sByName) else { msg = "CContactMgr 没有 getContactByName:"; return false }
                     let cu = wxid.withCString { remote_NSString(r, $0) }
-                    let contact = remote_msg(r, cc, selByName, cu, 0, 0, 0)
+                    let contact = cu != 0 ? remote_msg(r, cc, sByName, cu, 0, 0, 0) : 0
                     if contact == 0 { msg = "contact-not-found"; return false }
 
-                    let clsLM = "MMMsgLogicManager".withCString { remote_getClass(r, $0) }
-                    let lm = remote_msg(r, center, selGetSvc, clsLM, 0, 0, 0)
+                    let clsLM = clsOf("MMMsgLogicManager")
+                    if clsLM == 0 { msg = "MMMsgLogicManager 类不存在"; return false }
+                    let lm = remote_msg(r, center, sGetSvc, clsLM, 0, 0, 0)
                     if lm == 0 { msg = "MMMsgLogicManager nil"; return false }
 
-                    let selLC = "logicControllerForPeekingWithContact:messageWrap:".withCString { remote_sel(r, $0) }
-                    let lc = remote_msg(r, lm, selLC, contact, 0, 0, 0)
+                    let sLC = selOf("logicControllerForPeekingWithContact:messageWrap:")
+                    guard resp(lm, sLC) else { msg = "MMMsgLogicManager 没有 logicControllerForPeekingWithContact:messageWrap:"; return false }
+                    let lc = remote_msg(r, lm, sLC, contact, 0, 0, 0)
                     if lc == 0 { msg = "logicController nil"; return false }
 
-                    let selSend = "SendTextMessage:".withCString { remote_sel(r, $0) }
+                    let sSend = selOf("SendTextMessage:")
+                    guard resp(lc, sSend) else { msg = "逻辑控制器没有 SendTextMessage:"; return false }
                     let body = text.withCString { remote_NSString(r, $0) }
                     if body == 0 { msg = "text nil"; return false }
-                    _ = remote_msg(r, lc, selSend, body, 0, 0, 0)
+                    _ = remote_msg(r, lc, sSend, body, 0, 0, 0)
                     return true
                 })
                 return (200, ["ok": ok, "error": msg])
-
 
             case "/msg":
                 let obj = hex(params["o"])
