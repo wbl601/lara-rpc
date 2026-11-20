@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v36-2026-11-20T2110"
+let LARA_RPC_BUILD = "v37-2026-11-20T2120"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -524,7 +524,7 @@ final class RpcServer {
         // 它会把 opLock 占住几十秒，而这些接口必须随时能答 —— 否则连
         // 「到底卡在哪」都问不出来。连接线程已经是每连接一个，这里只管互斥。
         let cheap: Set<String> = ["/boot", "/health", "/log", "/stdout", "/diag",
-                                  "/applog", "/inject_status", "/pid", "/kread"]
+                                  "/applog", "/inject_status", "/pid", "/kread", "/hid/offset"]
         // 注意 defer 必须挂在函数作用域上。写在 if 块里会在块结束时立刻执行，
         // 锁刚加上就放掉，等于没加。
         let needsOpLock = !cheap.contains(path)
@@ -1154,6 +1154,11 @@ final class RpcServer {
                 let x = Double(params["x"] ?? "1111") ?? 1111
                 let y = Double(params["y"] ?? "2222") ?? 2222
                 let text = (remote_hid_scan(r, x, y) as String?) ?? ""
+                return (200, ["text": text])
+
+            // 本地标定 X/Y 字段偏移（不碰目标进程）。tap/swipe 首次调用会自动做。
+            case "/hid/offset":
+                let text = (remote_hid_measure_offsets() as String?) ?? ""
                 return (200, ["text": text])
 
             case "/msg":
