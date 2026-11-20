@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v43-2026-11-20T2255"
+let LARA_RPC_BUILD = "v44-2026-11-20T2310"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -708,7 +708,7 @@ final class RpcServer {
         case "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64",
              "/call", "/pool", "/wx/probe", "/wx/sessions", "/wx/send",
              "/hid/tap", "/hid/swipe", "/hid/probe", "/hid/diag", "/hid/reset",
-             "/hid/scan", "/hid/offset",
+             "/hid/scan", "/hid/offset", "/hid/ent",
              "/ui/click", "/ui/tap":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
@@ -1154,6 +1154,11 @@ final class RpcServer {
                 let x = Double(params["x"] ?? "1111") ?? 1111
                 let y = Double(params["y"] ?? "2222") ?? 2222
                 let text = (remote_hid_scan(r, x, y) as String?) ?? ""
+                return (200, ["text": text])
+
+            // 读目标进程 entitlements：判定 HID 派发是否被权限静默拦截。
+            case "/hid/ent":
+                let text = (remote_hid_entitlements(r) as String?) ?? ""
                 return (200, ["text": text])
 
             // 本地标定 X/Y 字段偏移（不碰目标进程）。tap/swipe 首次调用会自动做。
