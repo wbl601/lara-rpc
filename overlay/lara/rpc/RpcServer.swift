@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v48-2026-11-21T0030"
+let LARA_RPC_BUILD = "v49-2026-11-21T0120"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -709,6 +709,7 @@ final class RpcServer {
              "/call", "/pool", "/wx/probe", "/wx/sessions", "/wx/send",
              "/hid/tap", "/hid/swipe", "/hid/probe", "/hid/diag", "/hid/reset",
              "/hid/scan", "/hid/offset", "/hid/ent", "/hid/key", "/hid/var",
+             "/hid/syms", "/hid/svc",
              "/ui/click", "/ui/tap":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
@@ -1101,7 +1102,11 @@ final class RpcServer {
                       let x = Double(xs), let y = Double(ys) else {
                     return (400, ["error": "missing x/y"])
                 }
-                let v = Int32(params["v"] ?? "0") ?? 0
+                // v 允许 "0x07" 这种写法：之前只认十进制，传 0x07 会被 Int32 解成
+                // nil 然后落到默认 0，导致整轮变体扫描其实一直在跑基线。
+                let rawV = params["v"] ?? "0"
+                let vNum = rawV.hasPrefix("0x") ? Int(rawV.dropFirst(2), radix: 16) : Int(rawV)
+                let v = Int32(vNum ?? 0)
                 let hold = Double(params["hold"] ?? "60") ?? 60
                 let t0 = Date()
                 let rc = remote_hid_var(r, v, x, y, hold)
@@ -1159,6 +1164,14 @@ final class RpcServer {
                 let t = Int32(params["type"] ?? "1") ?? 1
                 remote_hid_client_reset(t)
                 return (200, ["ok": true, "type": Int(t)])
+
+            // 派发链路取证：关键符号是否存在 + 目标进程的 HID entitlement。
+            case "/hid/syms":
+                return (200, ["text": (remote_hid_syms(r) as String?) ?? ""])
+
+            // 枚举事件系统的 service，找出触摸屏数字化仪的 registryID（senderID 来源）。
+            case "/hid/svc":
+                return (200, ["text": (remote_hid_svc(r) as String?) ?? ""])
 
             case "/hid/diag":
                 let text = (remote_hid_diag(r) as String?) ?? ""
