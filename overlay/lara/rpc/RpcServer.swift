@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v34-2026-11-20T2025"
+let LARA_RPC_BUILD = "v35-2026-11-20T2045"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -569,6 +569,11 @@ final class RpcServer {
                 if let s = Int(params["stage"] ?? "9") {
                     rc_set_ro_stage(Int32(s))
                 }
+            }
+            // legacy=1：平台进程也走老流程（微信那条已验证可用的路径），
+            // legacy=0 复位。老流程自己会扫栈找 TRO 并校验，不依赖那套错掉的偏移。
+            if let lg = params["legacy"] {
+                rc_set_force_legacy(lg == "1")
             }
             let r = beginInject(proc, mig: mig, sign: sign)
             return (200, ["result": r, "inject": injectStatus()])
