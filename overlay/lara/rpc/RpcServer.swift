@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v25-2026-11-20T1720"
+let LARA_RPC_BUILD = "v26-2026-11-20T1755"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -678,7 +678,8 @@ final class RpcServer {
 
         case "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64",
              "/call", "/pool", "/wx/probe", "/wx/sessions", "/wx/send",
-             "/hid/tap", "/hid/swipe", "/hid/probe", "/hid/diag", "/hid/reset":
+             "/hid/tap", "/hid/swipe", "/hid/probe", "/hid/diag", "/hid/reset",
+             "/ui/click", "/ui/tap":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
                               "inject": injectStatus()])
@@ -1086,6 +1087,27 @@ final class RpcServer {
                 let rc = remote_hid_client_probe(r)
                 return (200, ["rc": Int(rc),
                               "error": (remote_hid_last_error() as String?) ?? ""])
+
+            // UIControl 级点击：不产生真实触摸，但对按钮/页签效果等价。
+            // 一次征用主线程遍历视图树 + 触发 action，整个过程在目标主线程上完成。
+            case "/ui/click":
+                guard let xs = params["x"], let ys = params["y"],
+                      let x = Double(xs), let y = Double(ys) else {
+                    return (400, ["error": "missing x/y"])
+                }
+                let t0 = Date()
+                let text = (remote_ui_click(r, x, y) as String?) ?? ""
+                return (200, ["ok": text.hasPrefix("#clicked"), "text": text,
+                              "ms": Int(Date().timeIntervalSince(t0) * 1000)])
+
+            case "/ui/tap":
+                guard let want = params["t"], !want.isEmpty else {
+                    return (400, ["error": "missing t (按钮标题)"])
+                }
+                let t0 = Date()
+                let text = (remote_ui_tap_text(r, want) as String?) ?? ""
+                return (200, ["ok": text.hasPrefix("#clicked"), "text": text,
+                              "ms": Int(Date().timeIntervalSince(t0) * 1000)])
 
             case "/hid/reset":
                 let t = Int32(params["type"] ?? "1") ?? 1
