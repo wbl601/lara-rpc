@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v20-2026-11-20T1400"
+let LARA_RPC_BUILD = "v21-2026-11-20T1425"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -800,6 +800,155 @@ final class RpcServer {
                     : remote_msg(r, pool, selDrain, 0, 0, 0, 0)
                 return (200, ["ok": true, "depth": stack.count - 1])
 
+            // ---- 微信业务批量路由 ----------------------------------------
+            //
+            // 为什么必须做成批量：主线程征用一次约 0.4 秒（投递 EXC_GUARD、唤醒、
+            // 两次 trap），而列一个会话要读十几个字段。按字段逐个 HTTP 调用 =
+            // 每个会话 12~14 次征用 ≈ 5 秒，100 个会话要 8 分钟，工作台 3 秒的 tick
+            // 根本没法用。放进一次征用里循环，全程只要 0.4 秒 + 每个 msgSend 的
+            // 几十微秒。
+            //
+            // 字段名全部照抄原厂 frida agent（_bridge.js 的 pollSessions / listSessions），
+            // 不是猜的。
+            case "/wx/sessions":
+                let limit = min(Int(params["limit"] ?? "80") ?? 80, 400)
+                var items: [[String: Any]] = []
+                var note = ""
+                let ok: Bool = r.doRemoteCallSyncOnMainThread {
+                    let selDefault = "defaultCenter".withCString { remote_sel(r, $0) }
+                    let selGetSvc = "getService:".withCString { remote_sel(r, $0) }
+                    let clsCenter = "MMServiceCenter".withCString { remote_getClass(r, $0) }
+                    let center = remote_msg(r, clsCenter, selDefault, 0, 0, 0, 0)
+                    if center == 0 { note = "MMServiceCenter.defaultCenter 返回 nil"; return false }
+
+                    let clsCC = "CContactMgr".withCString { remote_getClass(r, $0) }
+                    let cc = remote_msg(r, center, selGetSvc, clsCC, 0, 0, 0)
+                    let clsSM = "MMNewSessionMgr".withCString { remote_getClass(r, $0) }
+                    let sm = remote_msg(r, center, selGetSvc, clsSM, 0, 0, 0)
+                    if sm == 0 { note = "getService:MMNewSessionMgr 返回 nil"; return false }
+
+                    let selCount = "GetSessionCount".withCString { remote_sel(r, $0) }
+                    let selAt = "GetSessionAtIndex:".withCString { remote_sel(r, $0) }
+                    let selUser = "m_nsUserName".withCString { remote_sel(r, $0) }
+                    let selNick = "m_nsNickName".withCString { remote_sel(r, $0) }
+                    let selRemark = "m_nsRemark".withCString { remote_sel(r, $0) }
+                    let selAlias = "m_nsAliasName".withCString { remote_sel(r, $0) }
+                    let selContact = "m_contact".withCString { remote_sel(r, $0) }
+                    let selWrap = "m_msgWrap".withCString { remote_sel(r, $0) }
+                    let selSvr = "m_n64MesSvrID".withCString { remote_sel(r, $0) }
+                    let selContent = "m_nsContent".withCString { remote_sel(r, $0) }
+                    let selFrom = "m_nsFromUsr".withCString { remote_sel(r, $0) }
+                    let selTo = "m_nsToUsr".withCString { remote_sel(r, $0) }
+                    let selReal = "m_nsRealChatUsr".withCString { remote_sel(r, $0) }
+                    let selMType = "m_uiMessageType".withCString { remote_sel(r, $0) }
+                    let selCTime = "m_uiCreateTime".withCString { remote_sel(r, $0) }
+                    let selUnread = "m_uiUnreadCount".withCString { remote_sel(r, $0) }
+                    let selByName = "getContactByName:".withCString { remote_sel(r, $0) }
+
+                    let total = remote_msg(r, sm, selCount, 0, 0, 0, 0)
+                    let n = Int(min(total, UInt64(limit)))
+                    for i in 0..<n {
+                        let h = remote_msg(r, sm, selAt, UInt64(i), 0, 0, 0)
+                        if h == 0 { continue }
+                        guard let user = self.readNSString(remote_msg(r, h, selUser, 0, 0, 0, 0), r),
+                              !user.isEmpty else { continue }
+
+                        var nick = "", remark = "", alias = ""
+                        let cu = user.withCString { remote_NSString(r, $0) }
+                        let c = cu != 0 ? remote_msg(r, cc, selByName, cu, 0, 0, 0) : 0
+                        if c != 0 {
+                            nick = self.readNSString(remote_msg(r, c, selNick, 0, 0, 0, 0), r) ?? ""
+                            remark = self.readNSString(remote_msg(r, c, selRemark, 0, 0, 0, 0), r) ?? ""
+                            alias = self.readNSString(remote_msg(r, c, selAlias, 0, 0, 0, 0), r) ?? ""
+                        }
+                        // 群 wxid 在三档联系人接口里都可能查不到，会话自己挂的 m_contact 是兜底
+                        if nick.isEmpty && remark.isEmpty {
+                            let mc = remote_msg(r, h, selContact, 0, 0, 0, 0)
+                            if mc != 0 {
+                                nick = self.readNSString(remote_msg(r, mc, selNick, 0, 0, 0, 0), r) ?? ""
+                                remark = self.readNSString(remote_msg(r, mc, selRemark, 0, 0, 0, 0), r) ?? ""
+                            }
+                        }
+
+                        var svr: Int64 = 0
+                        var content = "", from = "", to = "", real = ""
+                        var mtype: UInt64 = 0, ctime: UInt64 = 0
+                        let w = remote_msg(r, h, selWrap, 0, 0, 0, 0)
+                        if w != 0 {
+                            svr = Int64(bitPattern: remote_msg(r, w, selSvr, 0, 0, 0, 0))
+                            content = self.readNSString(remote_msg(r, w, selContent, 0, 0, 0, 0), r) ?? ""
+                            from = self.readNSString(remote_msg(r, w, selFrom, 0, 0, 0, 0), r) ?? ""
+                            to = self.readNSString(remote_msg(r, w, selTo, 0, 0, 0, 0), r) ?? ""
+                            real = self.readNSString(remote_msg(r, w, selReal, 0, 0, 0, 0), r) ?? ""
+                            mtype = remote_msg(r, w, selMType, 0, 0, 0, 0) & 0xffffffff
+                            ctime = remote_msg(r, w, selCTime, 0, 0, 0, 0) & 0xffffffff
+                        }
+                        let unread = remote_msg(r, h, selUnread, 0, 0, 0, 0) & 0xffffffff
+                        let isGroup = user.contains("@chatroom")
+                        let display = !remark.isEmpty ? remark : (!nick.isEmpty ? nick : user)
+                        items.append([
+                            "wxid": user,
+                            "name": display,
+                            "nick": nick,
+                            "remark": remark,
+                            "alias": alias,
+                            "group": isGroup,
+                            "svrid": String(svr),
+                            "content": content,
+                            "from": from,
+                            "to": to,
+                            "real": real,
+                            "mtype": Int(mtype),
+                            "ctime": Int(ctime),
+                            "unread": Int(unread),
+                            "has_last": w != 0,
+                        ])
+                    }
+                    return true
+                }
+                return (200, ["ok": ok, "count": items.count, "error": note, "items": items])
+
+            // 发文本：一次征用主线程，把「取联系人 → 取 peeking 控制器 → 发送」全跑完。
+            // 不能拆成多次 /call：每次都重新征用主线程，而且中间对象会被 pool 收走。
+            case "/wx/send":
+                guard let wxid = params["wxid"], !wxid.isEmpty,
+                      let text = params["text"] else {
+                    return (400, ["error": "missing wxid/text"])
+                }
+                var msg = ""
+                let ok: Bool = r.doRemoteCallSyncOnMainThread {
+                    let selDefault = "defaultCenter".withCString { remote_sel(r, $0) }
+                    let selGetSvc = "getService:".withCString { remote_sel(r, $0) }
+                    let clsCenter = "MMServiceCenter".withCString { remote_getClass(r, $0) }
+                    let center = remote_msg(r, clsCenter, selDefault, 0, 0, 0, 0)
+                    if center == 0 { msg = "defaultCenter nil"; return false }
+
+                    let clsCC = "CContactMgr".withCString { remote_getClass(r, $0) }
+                    let cc = remote_msg(r, center, selGetSvc, clsCC, 0, 0, 0)
+                    if cc == 0 { msg = "CContactMgr nil"; return false }
+
+                    let selByName = "getContactByName:".withCString { remote_sel(r, $0) }
+                    let cu = wxid.withCString { remote_NSString(r, $0) }
+                    let contact = remote_msg(r, cc, selByName, cu, 0, 0, 0)
+                    if contact == 0 { msg = "contact-not-found"; return false }
+
+                    let clsLM = "MMMsgLogicManager".withCString { remote_getClass(r, $0) }
+                    let lm = remote_msg(r, center, selGetSvc, clsLM, 0, 0, 0)
+                    if lm == 0 { msg = "MMMsgLogicManager nil"; return false }
+
+                    let selLC = "logicControllerForPeekingWithContact:messageWrap:".withCString { remote_sel(r, $0) }
+                    let lc = remote_msg(r, lm, selLC, contact, 0, 0, 0)
+                    if lc == 0 { msg = "logicController nil"; return false }
+
+                    let selSend = "SendTextMessage:".withCString { remote_sel(r, $0) }
+                    let body = text.withCString { remote_NSString(r, $0) }
+                    if body == 0 { msg = "text nil"; return false }
+                    _ = remote_msg(r, lc, selSend, body, 0, 0, 0)
+                    return true
+                }
+                return (200, ["ok": ok, "error": msg])
+
+
             case "/msg":
                 let obj = hex(params["o"])
                 let sel = hex(params["s"])
@@ -857,7 +1006,7 @@ final class RpcServer {
                                                            "/reset", "/stdout", "/applog", "/diag", "/timeout",
                                                            "/pid", "/launch", "/log", "/stop",
                                                            "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64",
-                                                           "/call", "/pool"]])
+                                                           "/call", "/pool", "/wx/sessions", "/wx/send"]])
         }
     }
 
