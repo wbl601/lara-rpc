@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v19-2026-11-20T0140"
+let LARA_RPC_BUILD = "v20-2026-11-20T1400"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -40,6 +40,12 @@ final class RpcServer {
     // route 里可能间接再进一次（例如 /relaunch 内部调 launch）。
     private let opLock = NSRecursiveLock()
     private var logs: [String] = []
+
+    // /pool 的 autorelease pool 栈，按「跑在哪个线程上」分开存。
+    // trojan 线程和被征用的主线程是两条独立的线程，各自的 pool 栈也独立，
+    // 混在一起 pop 会 drain 错线程的池（等于什么都没做，还丢了一个 pool 引用）。
+    private let poolLock = NSLock()
+    private var poolStack: [String: [UInt64]] = [:]
 
     // 注入状态机。为什么必须有这个：
     // RemoteCall 进一个「已被系统挂起」的进程时，那个远程线程永远不会被调度，
@@ -716,6 +722,84 @@ final class RpcServer {
                 let addr = text.withCString { remote_NSString(r, $0) }
                 return (200, ["addr": hexString(addr)])
 
+            // 带类型解读的远程调用。
+            //
+            // 为什么不能用 /msg：微信的字段大量返回标量（GetSessionCount 是 NSUInteger，
+            // m_n64MesSvrID 是 int64，m_uiMessageType 是 uint32），而 /msg 只会把 x0
+            // 当指针打出来。arm64 上这些值都在 x0 里，所以一次调用就能同时给出
+            // hex / u32 / i32 / u64 / i64 五种视图，PC 侧按字段类型自取，省掉一半往返。
+            // rt=s 表示返回值是 NSString，顺便读回来。
+            case "/call":
+                let obj = hex(params["o"])
+                let sel = hex(params["s"])
+                if sel == 0 { return (400, ["error": "missing s (selector address)"]) }
+                let a0 = argValue(params["a0"], r)
+                let a1 = argValue(params["a1"], r)
+                let a2 = argValue(params["a2"], r)
+                let a3 = argValue(params["a3"], r)
+                let onMain = (params["main"] ?? "0") != "0"
+                let ret = onMain
+                    ? remote_msg_main(r, obj, sel, a0, a1, a2, a3)
+                    : remote_msg(r, obj, sel, a0, a1, a2, a3)
+                var out: [String: Any] = [
+                    "ret": hexString(ret),
+                    "u32": String(UInt32(truncatingIfNeeded: ret)),
+                    "i32": String(Int32(bitPattern: UInt32(truncatingIfNeeded: ret))),
+                    "u64": String(ret),
+                    "i64": String(Int64(bitPattern: ret)),
+                    "errno": Int(remote_errno(r)),
+                ]
+                if (params["rt"] ?? "") == "s" {
+                    out["s"] = readNSString(ret, r) ?? ""
+                }
+                return (200, out)
+
+            // 手动管理 autorelease pool。
+            //
+            // 这是接微信业务层的前提：我们的 trojan 线程和「被征用的主线程」都不是
+            // WeChat 自己的线程，没有外层 pool。WeChat 内部大量对象以 autorelease
+            // 返回，没有 pool 兜着就会一路堆到 per-process 上限被 jetsam 打死
+            // （原厂 frida agent 里写着实测：poll 每次 +3.3MB，sessions 每次 +5.2MB）。
+            //
+            // 规矩和原厂一样：pool 里能带出来的只有 JS/PC 侧的原生值（字符串、数字），
+            // 需要长期持有的对象必须先 -retain 再 pop，否则就是野指针。
+            case "/pool":
+                let op = params["op"] ?? "push"
+                let onMain = (params["main"] ?? "0") != "0"
+                let key = onMain ? "main" : "trojan"
+                poolLock.lock()
+                let stack = poolStack[key] ?? []
+                poolLock.unlock()
+
+                if op == "push" {
+                    let cls = "NSAutoreleasePool".withCString { remote_getClass(r, $0) }
+                    let selAlloc = "alloc".withCString { remote_sel(r, $0) }
+                    let selInit = "init".withCString { remote_sel(r, $0) }
+                    let raw = onMain
+                        ? remote_msg_main(r, cls, selAlloc, 0, 0, 0, 0)
+                        : remote_msg(r, cls, selAlloc, 0, 0, 0, 0)
+                    let pool = onMain
+                        ? remote_msg_main(r, raw, selInit, 0, 0, 0, 0)
+                        : remote_msg(r, raw, selInit, 0, 0, 0, 0)
+                    poolLock.lock()
+                    poolStack[key] = stack + [pool]
+                    let depth = stack.count + 1
+                    poolLock.unlock()
+                    return (200, ["ok": true, "depth": depth, "pool": hexString(pool)])
+                }
+
+                guard let pool = stack.last else {
+                    return (200, ["ok": false, "error": "pool stack empty"])
+                }
+                let selDrain = "drain".withCString { remote_sel(r, $0) }
+                poolLock.lock()
+                poolStack[key] = Array(stack.dropLast())
+                poolLock.unlock()
+                _ = onMain
+                    ? remote_msg_main(r, pool, selDrain, 0, 0, 0, 0)
+                    : remote_msg(r, pool, selDrain, 0, 0, 0, 0)
+                return (200, ["ok": true, "depth": stack.count - 1])
+
             case "/msg":
                 let obj = hex(params["o"])
                 let sel = hex(params["s"])
@@ -772,7 +856,8 @@ final class RpcServer {
             return (404, ["error": "unknown path", "paths": ["/health", "/inject", "/inject_status",
                                                            "/reset", "/stdout", "/applog", "/diag", "/timeout",
                                                            "/pid", "/launch", "/log", "/stop",
-                                                           "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64"]])
+                                                           "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64",
+                                                           "/call", "/pool"]])
         }
     }
 
@@ -804,6 +889,12 @@ final class RpcServer {
         if raw.hasPrefix("str:") {
             let s = String(raw.dropFirst(4))
             return s.withCString { remote_NSString(r, $0) }
+        }
+        // i: 前缀 = 十进制整数。必须显式标出来：不带前缀的一律按十六进制解析，
+        // 所以 "10" 是 0x10。`GetSessionAtIndex:` 这类收 NSUInteger 的方法如果把
+        // 十进制当十六进制传进去，就会去取第 16 个会话 —— 越界读，微信直接崩。
+        if raw.hasPrefix("i:") {
+            return UInt64(String(raw.dropFirst(2))) ?? 0
         }
         return hex(raw)
     }
