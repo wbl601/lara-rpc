@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v51-2026-11-21T0235"
+let LARA_RPC_BUILD = "v52-2026-11-21T0310"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -710,6 +710,7 @@ final class RpcServer {
              "/hid/tap", "/hid/swipe", "/hid/probe", "/hid/diag", "/hid/reset",
              "/hid/scan", "/hid/offset", "/hid/ent", "/hid/key", "/hid/var",
              "/hid/syms", "/hid/svc", "/hid/setid", "/hid/svcdump",
+             "/hid/tapz", "/hid/sid",
              "/ui/click", "/ui/tap":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
@@ -1127,6 +1128,41 @@ final class RpcServer {
                     "sid": String(format: "0x%llx", remote_hid_get_sender()),
                     "ms": Int(Date().timeIntervalSince(t0) * 1000),
                     "error": (remote_hid_last_error() as String?) ?? "",
+                ])
+
+            // 忠实版点击（v52）：按 ZXTouch 真实调用约定构造事件，带 senderID。
+            // x/y 逻辑点，sw/sh 屏幕逻辑点尺寸（默认 iPhone 12 = 390x844）。
+            case "/hid/tapz":
+                guard let a = params["x"], let b = params["y"],
+                      let x = Double(a), let y = Double(b) else {
+                    return (400, ["error": "missing x/y"])
+                }
+                let sw = Double(params["sw"] ?? "390") ?? 390
+                let sh = Double(params["sh"] ?? "844") ?? 844
+                let hold = Double(params["hold"] ?? "80") ?? 80
+                if let s = params["sid"], s != "0" {
+                    let num = s.hasPrefix("0x") ? UInt64(s.dropFirst(2), radix: 16) : UInt64(s)
+                    if let v = num { remote_hid_set_sender(v) }
+                }
+                let t0 = Date()
+                var info: NSString? = nil
+                let rc = remote_hid_tapz(r, x, y, sw, sh, hold, &info)
+                return (200, [
+                    "rc": Int(rc), "x": x, "y": y, "sw": sw, "sh": sh, "hold": hold,
+                    "sid": String(format: "0x%llx", remote_hid_get_sender()),
+                    "ms": Int(Date().timeIntervalSince(t0) * 1000),
+                    "error": (remote_hid_last_error() as String?) ?? "",
+                    "info": (info as String?) ?? "",
+                ])
+
+            // 解析触摸屏 senderID（从 HID service 的 SenderID 属性）。force=1 清缓存重查。
+            case "/hid/sid":
+                let force = Int32(params["force"] ?? "0") ?? 0
+                var rep: NSString? = nil
+                let sid = remote_hid_sender_auto(r, force, &rep)
+                return (200, [
+                    "sid": String(format: "0x%llx", sid),
+                    "text": (rep as String?) ?? "",
                 ])
 
             // 设置注入事件的 senderID。十六进制可带 0x 前缀。
