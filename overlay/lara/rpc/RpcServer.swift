@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v50-2026-11-21T0155"
+let LARA_RPC_BUILD = "v51-2026-11-21T0235"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -709,7 +709,7 @@ final class RpcServer {
              "/call", "/pool", "/wx/probe", "/wx/sessions", "/wx/send",
              "/hid/tap", "/hid/swipe", "/hid/probe", "/hid/diag", "/hid/reset",
              "/hid/scan", "/hid/offset", "/hid/ent", "/hid/key", "/hid/var",
-             "/hid/syms", "/hid/svc", "/hid/setid",
+             "/hid/syms", "/hid/svc", "/hid/setid", "/hid/svcdump",
              "/ui/click", "/ui/tap":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
@@ -1191,6 +1191,10 @@ final class RpcServer {
             // 枚举事件系统的 service，找出触摸屏数字化仪的 registryID（senderID 来源）。
             case "/hid/svc":
                 return (200, ["text": (remote_hid_svc(r) as String?) ?? ""])
+
+            // 逐个 dump service 的属性字典，硬性判定哪个是触摸屏（page=0x0D usage=0x04）。
+            case "/hid/svcdump":
+                return (200, ["text": (remote_hid_svcdump(r) as String?) ?? ""])
 
             case "/hid/diag":
                 let text = (remote_hid_diag(r) as String?) ?? ""
