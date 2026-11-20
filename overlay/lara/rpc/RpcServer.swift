@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v49-2026-11-21T0120"
+let LARA_RPC_BUILD = "v50-2026-11-21T0155"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -709,7 +709,7 @@ final class RpcServer {
              "/call", "/pool", "/wx/probe", "/wx/sessions", "/wx/send",
              "/hid/tap", "/hid/swipe", "/hid/probe", "/hid/diag", "/hid/reset",
              "/hid/scan", "/hid/offset", "/hid/ent", "/hid/key", "/hid/var",
-             "/hid/syms", "/hid/svc",
+             "/hid/syms", "/hid/svc", "/hid/setid",
              "/ui/click", "/ui/tap":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
@@ -1098,9 +1098,20 @@ final class RpcServer {
                 ])
 
             case "/hid/var":
-                guard let xs = params["x"], let ys = params["y"],
-                      let x = Double(xs), let y = Double(ys) else {
-                    return (400, ["error": "missing x/y"])
+                // 坐标支持两种给法：
+                //   nx/ny —— 已经是 0..1 归一化值（数字化仪真正要的就是这个）
+                //   x/y   —— 逻辑点，按 sw/sh（默认 390x844，iPhone 12）换算
+                var nx = 0.0, ny = 0.0
+                if let a = params["nx"], let b = params["ny"],
+                   let vx = Double(a), let vy = Double(b) {
+                    nx = vx; ny = vy
+                } else if let a = params["x"], let b = params["y"],
+                          let vx = Double(a), let vy = Double(b) {
+                    let sw = Double(params["sw"] ?? "390") ?? 390
+                    let sh = Double(params["sh"] ?? "844") ?? 844
+                    nx = vx / sw; ny = vy / sh
+                } else {
+                    return (400, ["error": "missing nx/ny or x/y"])
                 }
                 // v 允许 "0x07" 这种写法：之前只认十进制，传 0x07 会被 Int32 解成
                 // nil 然后落到默认 0，导致整轮变体扫描其实一直在跑基线。
@@ -1109,13 +1120,21 @@ final class RpcServer {
                 let v = Int32(vNum ?? 0)
                 let hold = Double(params["hold"] ?? "60") ?? 60
                 let t0 = Date()
-                let rc = remote_hid_var(r, v, x, y, hold)
+                let rc = remote_hid_var(r, v, nx, ny, hold)
                 return (200, [
                     "rc": Int(rc), "v": Int(v),
-                    "x": x, "y": y, "hold": hold,
+                    "nx": nx, "ny": ny, "hold": hold,
+                    "sid": String(format: "0x%llx", remote_hid_get_sender()),
                     "ms": Int(Date().timeIntervalSince(t0) * 1000),
                     "error": (remote_hid_last_error() as String?) ?? "",
                 ])
+
+            // 设置注入事件的 senderID。十六进制可带 0x 前缀。
+            case "/hid/setid":
+                let raw = params["sid"] ?? "0"
+                let num = raw.hasPrefix("0x") ? UInt64(raw.dropFirst(2), radix: 16) : UInt64(raw)
+                remote_hid_set_sender(num ?? 0)
+                return (200, ["sid": String(format: "0x%llx", remote_hid_get_sender())])
 
             case "/hid/swipe":
                 guard let a = params["x1"], let b = params["y1"],
