@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v33-2026-11-20T2005"
+let LARA_RPC_BUILD = "v34-2026-11-20T2025"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -524,7 +524,7 @@ final class RpcServer {
         // 它会把 opLock 占住几十秒，而这些接口必须随时能答 —— 否则连
         // 「到底卡在哪」都问不出来。连接线程已经是每连接一个，这里只管互斥。
         let cheap: Set<String> = ["/boot", "/health", "/log", "/stdout", "/diag",
-                                  "/applog", "/inject_status", "/pid"]
+                                  "/applog", "/inject_status", "/pid", "/kread"]
         // 注意 defer 必须挂在函数作用域上。写在 if 块里会在块结束时立刻执行，
         // 锁刚加上就放掉，等于没加。
         let needsOpLock = !cheap.contains(path)
@@ -583,6 +583,21 @@ final class RpcServer {
         // RemoteCall.m 里 printf 直写的那份日志（rc_diagf → rc-diag.log）。
         // 和 /stdout、/applog 的区别：这条路径完全不经过 lara 的 Logger，
         // 不会因为它的行过滤或落盘时机丢内容，崩之前写的一定在。
+        // 调试用任意内核读：/kread?addr=0xffffffe...&n=32
+        // 只读，不写内核。偏移分析全靠它 —— 以前每换一个假设都要重编一次，
+        // 现在可以直接在 PC 上边读边算。地址写成十六进制（可带 0x 前缀）。
+        case "/kread":
+            let raw = (params["addr"] ?? "").lowercased()
+            let hexStr = raw.hasPrefix("0x") ? String(raw.dropFirst(2)) : raw
+            guard let addr = UInt64(hexStr, radix: 16), addr != 0 else {
+                return (400, ["error": "bad addr", "got": params["addr"] ?? ""])
+            }
+            let n = max(1, min(Int(params["n"] ?? "8") ?? 8, 1024))
+            var buf = [UInt64](repeating: 0, count: n)
+            rc_dbg_kread(addr, &buf, Int32(n))
+            let qwords = buf.map { String(format: "%016llx", $0) }
+            return (200, ["addr": String(format: "0x%llx", addr), "n": n, "qwords": qwords])
+
         case "/diag":
             if params["clear"] == "1" {
                 try? FileManager.default.removeItem(atPath: diagPath ?? "")
