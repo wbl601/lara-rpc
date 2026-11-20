@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v31-2026-11-20T1930"
+let LARA_RPC_BUILD = "v32-2026-11-20T1945"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -562,9 +562,13 @@ final class RpcServer {
             // 0 路径按目标线程自己的 diversifier 签名，SpringBoard 上实测 memset 成功。
             let sign = Int(params["sign"] ?? "0") ?? 0
             // ro=1：只读现场提取。init 走到线程链表解析后 dump 完就放弃，
-            // 一个内核字节都不写。用来在写之前把偏移证对（见 RemoteCall.m rc_ro_dump_task）。
+            // 一个内核字节都不写。用来在写之前把偏移证对（见 RemoteCall.m rc_ro_run_stages）。
+            // stage=N 分级：先跑 1，活着再往上加，死了也知道死在第几级。
             if (params["ro"] == "1") {
                 rc_set_ro_probe(true)
+                if let s = Int(params["stage"] ?? "9") {
+                    rc_set_ro_stage(Int32(s))
+                }
             }
             let r = beginInject(proc, mig: mig, sign: sign)
             return (200, ["result": r, "inject": injectStatus()])
