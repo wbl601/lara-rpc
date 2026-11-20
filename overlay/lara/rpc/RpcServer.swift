@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v23-2026-11-20T1520"
+let LARA_RPC_BUILD = "v24-2026-11-20T1640"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -677,7 +677,8 @@ final class RpcServer {
         // ---- 以下都是远程原语，必须先注入成功 ----
 
         case "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64",
-             "/call", "/pool", "/wx/probe", "/wx/sessions", "/wx/send":
+             "/call", "/pool", "/wx/probe", "/wx/sessions", "/wx/send",
+             "/hid/tap", "/hid/swipe", "/hid/probe", "/hid/diag":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
                               "inject": injectStatus()])
@@ -1041,6 +1042,54 @@ final class RpcServer {
                     return true
                 })
                 return (200, ["ok": ok, "error": msg])
+
+            // ---- HID 触摸注入 ----
+            //
+            // 在目标进程里合成 IOHIDEvent 再派发。注意目标必须是 SpringBoard：
+            // 只有被事件系统信任的进程派发出去的事件才会真正落到 UI 上，普通 app
+            // 自己的 client 派发等于往空气里发。所以 inject 时用 proc=SpringBoard。
+            //
+            // 坐标是「点」（逻辑坐标），不是像素。字号/缩放下点坐标更稳。
+            case "/hid/tap":
+                guard let xs = params["x"], let ys = params["y"],
+                      let x = Double(xs), let y = Double(ys) else {
+                    return (400, ["error": "missing x/y (逻辑坐标，单位 pt)"])
+                }
+                let hold = Double(params["hold"] ?? "60") ?? 60
+                let t0 = Date()
+                let rc = remote_hid_tap(r, x, y, hold)
+                return (200, [
+                    "rc": Int(rc),
+                    "x": x, "y": y, "hold": hold,
+                    "ms": Int(Date().timeIntervalSince(t0) * 1000),
+                    "error": (remote_hid_last_error() as String?) ?? "",
+                ])
+
+            case "/hid/swipe":
+                guard let a = params["x1"], let b = params["y1"],
+                      let c = params["x2"], let d = params["y2"],
+                      let x1 = Double(a), let y1 = Double(b),
+                      let x2 = Double(c), let y2 = Double(d) else {
+                    return (400, ["error": "missing x1/y1/x2/y2"])
+                }
+                let steps = Int32(params["steps"] ?? "8") ?? 8
+                let dur = Double(params["ms"] ?? "260") ?? 260
+                let t0 = Date()
+                let rc = remote_hid_swipe(r, x1, y1, x2, y2, steps, dur)
+                return (200, [
+                    "rc": Int(rc), "steps": Int(steps),
+                    "ms": Int(Date().timeIntervalSince(t0) * 1000),
+                    "error": (remote_hid_last_error() as String?) ?? "",
+                ])
+
+            case "/hid/probe":
+                let rc = remote_hid_client_probe(r)
+                return (200, ["rc": Int(rc),
+                              "error": (remote_hid_last_error() as String?) ?? ""])
+
+            case "/hid/diag":
+                let text = (remote_hid_diag(r) as String?) ?? ""
+                return (200, ["text": text])
 
             case "/msg":
                 let obj = hex(params["o"])
