@@ -24,7 +24,7 @@ import UIKit
 /// 之前完全没法确认手机上跑的是不是刚编出来的包：Info.plist 里的版本号是上游的
 /// （0.2 / Release），装十个包看到的值都一样，出问题只能靠猜和重启。
 /// 现在 RPC 页顶部和 /health 都会显示它，装完瞄一眼就知道。
-let LARA_RPC_BUILD = "v47-2026-11-20T2355"
+let LARA_RPC_BUILD = "v48-2026-11-21T0030"
 
 final class RpcServer {
     static let shared = RpcServer()
@@ -708,7 +708,7 @@ final class RpcServer {
         case "/c", "/s", "/str", "/msg", "/msg_main", "/ui", "/rd", "/rd64",
              "/call", "/pool", "/wx/probe", "/wx/sessions", "/wx/send",
              "/hid/tap", "/hid/swipe", "/hid/probe", "/hid/diag", "/hid/reset",
-             "/hid/scan", "/hid/offset", "/hid/ent", "/hid/key",
+             "/hid/scan", "/hid/offset", "/hid/ent", "/hid/key", "/hid/var",
              "/ui/click", "/ui/tap":
             guard let r = currentRC() else {
                 return (409, ["error": "not injected, POST /inject?proc=WeChat first",
@@ -1091,6 +1091,22 @@ final class RpcServer {
                 let rc = remote_hid_tap(r, x, y, hold)
                 return (200, [
                     "rc": Int(rc),
+                    "x": x, "y": y, "hold": hold,
+                    "ms": Int(Date().timeIntervalSince(t0) * 1000),
+                    "error": (remote_hid_last_error() as String?) ?? "",
+                ])
+
+            case "/hid/var":
+                guard let xs = params["x"], let ys = params["y"],
+                      let x = Double(xs), let y = Double(ys) else {
+                    return (400, ["error": "missing x/y"])
+                }
+                let v = Int32(params["v"] ?? "0") ?? 0
+                let hold = Double(params["hold"] ?? "60") ?? 60
+                let t0 = Date()
+                let rc = remote_hid_var(r, v, x, y, hold)
+                return (200, [
+                    "rc": Int(rc), "v": Int(v),
                     "x": x, "y": y, "hold": hold,
                     "ms": Int(Date().timeIntervalSince(t0) * 1000),
                     "error": (remote_hid_last_error() as String?) ?? "",
