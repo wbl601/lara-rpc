@@ -1,0 +1,113 @@
+name: wda
+
+# 产出 WebDriverAgent 的 XCTest runner（未签名 ipa），给 iOS 27 上的 UI 自动化用。
+# 为什么要它：iOS 27.2.1 已不在 lara 支持范围（16.0–18.7.1 / 26.0–26.0.1），内核读写
+# 那条路彻底没了。XCUITest 是官方通道，不需要内核漏洞，能点、能滑、能输入、能取控件树。
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/wda.yml'
+
+permissions:
+  contents: write
+
+env:
+  WDA_REPO: https://github.com/appium/WebDriverAgent.git
+  WDA_REF: master
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 选择 Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: 版本信息
+        run: |
+          xcodebuild -version
+          sw_vers
+
+      - name: clone WebDriverAgent
+        run: |
+          git clone --depth 1 --branch "$WDA_REF" "$WDA_REPO" wda || \
+          git clone --depth 1 "$WDA_REPO" wda
+          git -C wda log --oneline -1
+          ls wda | head -30
+          ls wda/WebDriverAgent.xcodeproj/xcshareddata/xcschemes 2>/dev/null
+
+      - name: 编译 build-for-testing
+        run: |
+          cd wda
+          set -o pipefail
+          xcodebuild build-for-testing \
+            -project WebDriverAgent.xcodeproj \
+            -scheme WebDriverAgentRunner \
+            -destination 'generic/platform=iOS' \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_EXTRA_ARGS="" \
+            2>&1 | tee build.log | tail -60
+          echo "=== products ==="
+          find build/Build/Products -maxdepth 4 -name "*.app" -o -maxdepth 4 -name "*.xctest" | head -20
+
+      - name: 打包 ipa
+        run: |
+          cd wda
+          APP=$(find build/Build/Products -maxdepth 4 -name "*-Runner.app" | head -1)
+          if [ -z "$APP" ]; then APP=$(find build/Build/Products -maxdepth 4 -name "*.app" | head -1); fi
+          echo "APP=$APP"
+          if [ -z "$APP" ]; then echo "没有产出 .app"; exit 1; fi
+          mkdir -p out/Payload
+          cp -R "$APP" out/Payload/
+          # 记下 runner 的 bundle id，本地签名时要按它改名
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "out/Payload/$(basename "$APP")/Info.plist"
+          find out/Payload -maxdepth 3 | head -40
+          cd out && zip -qry ../wda.ipa Payload && cd ..
+          ls -la wda.ipa
+          cp build.log ../wda-build.log 2>/dev/null || true
+
+      - name: 上传产物
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wda-ipa
+          if-no-files-found: ignore
+          path: |
+            wda/wda.ipa
+            wda/build.log
+            wda/out/Payload
+
+      - name: 失败时提交日志
+        if: failure()
+        run: |
+          mkdir -p logs
+          cp wda/build.log logs/wda-build.log 2>/dev/null || true
+          if [ -s logs/wda-build.log ]; then
+            git config user.name "ci-bot"
+            git config user.email "ci-bot@users.noreply.github.com"
+            git add -A logs
+            git commit -m "ci: wda 编译失败日志 $(date -u +%Y-%m-%dT%H:%M:%SZ)" || true
+            git push || true
+          fi
+
+      - name: 发布 Release
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="wda-$(date -u +%Y%m%d-%H%M%S)"
+          gh release create "$TAG" wda/wda.ipa \
+            --title "$TAG" \
+            --notes "WebDriverAgent XCTest runner (unsigned, appium/WDA $WDA_REF)" \
+            --latest=false
+          echo "已发布 release: $TAG"
